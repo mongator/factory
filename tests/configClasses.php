@@ -5,7 +5,23 @@ return array(
         'useBatchInsert' => true,
         'collection' => 'articles',
         'fields' => array(
-            'title'    => 'string',
+            'title'    => array(
+                'type' => 'string',
+                'validation' => array(
+                    array('NotBlank' => NULL),
+                ),
+            ),
+            'status' => array(
+                'type' => 'string',
+                'validation' => array(
+                    array('NotBlank' => NULL),
+                    array('Choice' => 
+                        array('choices' => 
+                            array('active','deleted'),
+                        ),
+                    ),
+                ),
+            ),
             'content'  => 'string',
             'note'     => 'string',
             'line'     => 'string',

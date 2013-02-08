@@ -3,7 +3,61 @@ namespace Mandango\Factory;
 use Mandango\Mandango;
 
 class Factory {
-    public function setMandango()
+    private $mandango;
+    private $configClasses;
+
+    public function __construct(Mandango $mandango)
+    {
+        $this->mandango = $mandango;
+        $this->configClasses = array();
+    }
+
+    public function getMandango()
+    {
+        return $this->mandango;
+    }
+
+    public function setConfigClass($class, array $configClass)
+    {
+        $this->configClasses[$class] = $configClass;
+    }
+
+    public function setConfigClasses(array $configClasses)
+    {
+        $this->configClasses = array();
+        foreach ($configClasses as $class => $configClass) {
+            $this->setConfigClass($class, $configClass);
+        }
+    }
+
+    public function hasConfigClass($class)
+    {
+        return array_key_exists($class, $this->configClasses);
+    }
+
+    public function getConfigClasses()
+    {
+        return $this->configClasses;
+    }
+
+    public function getConfigClass($class)
+    {
+        if (!$this->hasConfigClass($class)) {
+            throw new \InvalidArgumentException(sprintf('The config class "%s" does not exists.', $class));
+        }
+
+        return $this->configClasses[$class];
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     public function define($blueprintName, $definition, $defaultsOverride = array(), $associations = array()) 

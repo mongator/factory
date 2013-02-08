@@ -1,2 +1,6 @@
 tests/Model/
 vendor
+composer.lock
+doc
+vendor
+*.swp

@@ -11,10 +11,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
 {
     static protected $staticConnection;
     static protected $staticMandango;
+    static protected $staticConfigClasses;
 
     protected $metadataFactoryClass = 'Model\Mapping\MetadataFactory';
     protected $server = 'mongodb://localhost:27017';
-    protected $dbName = 'mandango_behaviors_tests';
+    protected $dbName = 'mandango_factory_tests';
 
     protected $connection;
     protected $mandango;
@@ -36,6 +37,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
             static::$staticMandango->setConnection('default', $this->connection);
             static::$staticMandango->setDefaultConnectionName('default');
         }
+
+        if (!static::$staticConfigClasses) {
+            static::$staticConfigClasses = require __DIR__.'/../../configClasses.php';
+        }
+
         $this->mandango = static::$staticMandango;
         $this->unitOfWork = $this->mandango->getUnitOfWork();
         $this->metadataFactory = $this->mandango->getMetadataFactory();
