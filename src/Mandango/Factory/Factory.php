@@ -1,8 +1,11 @@
 <?php
-namespace Mandango\Phactory;
-use Phactory\Mongo\Phactory as PhactoryBase;
+namespace Mandango\Factory;
+use Mandango\Mandango;
 
-class Phactory extends PhactoryBase {
+class Factory {
+    public function setMandango()
+
+
     public function define($blueprintName, $definition, $defaultsOverride = array(), $associations = array()) 
     {
         $defaults = $this->getDefault($definition);
