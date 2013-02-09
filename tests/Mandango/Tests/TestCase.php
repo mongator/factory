@@ -6,9 +6,11 @@ use Mandango\Connection;
 use Mandango\Mandango;
 use Mandango\Archive;
 use Mandango\Type\Container as TypeContainer;
+use Faker\Factory;
 
 class TestCase extends \PHPUnit_Framework_TestCase
-{
+{   
+    static protected $staticFaker;
     static protected $staticConnection;
     static protected $staticMandango;
     static protected $staticConfigClasses;
@@ -32,6 +34,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
         }
         $this->connection = static::$staticConnection;
 
+        if (!static::$staticFaker) {
+            static::$staticFaker = Factory::create();
+        }
+
+
         if (!static::$staticMandango) {
             static::$staticMandango = new Mandango(new $this->metadataFactoryClass, new ArrayCache(), function($log) {});
             static::$staticMandango->setConnection('default', $this->connection);
@@ -42,6 +49,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             static::$staticConfigClasses = require __DIR__.'/../../configClasses.php';
         }
 
+        $this->faker = static::$staticFaker;
         $this->mandango = static::$staticMandango;
         $this->unitOfWork = $this->mandango->getUnitOfWork();
         $this->metadataFactory = $this->mandango->getMetadataFactory();

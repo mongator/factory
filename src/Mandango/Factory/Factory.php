@@ -1,19 +1,17 @@
 <?php
 namespace Mandango\Factory;
 use Mandango\Mandango;
-use Faker\Factory as FakerFactory;
+use Faker\Generator;
 
 class Factory {
-    const DEFAULT_LOCALE = 'en_US';
-
     private $mandango;
     private $faker;
     private $configClasses;
 
-    public function __construct(Mandango $mandango, $locale = self::DEFAULT_LOCALE)
+    public function __construct(Mandango $mandango, Generator $faker)
     {
         $this->mandango = $mandango;
-        $this->faker = FakerFactory::create($locale);
+        $this->faker = $faker;
 
         $this->configClasses = array();
     }

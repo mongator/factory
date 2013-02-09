@@ -10,7 +10,7 @@ class DefaultGeneratorTest extends TestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->factory = new Factory($this->mandango);
+        $this->factory = new Factory($this->mandango, $this->faker);
         $this->factory->setConfigClasses(self::$staticConfigClasses);
     }   
 

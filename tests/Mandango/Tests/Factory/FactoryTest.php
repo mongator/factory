@@ -4,15 +4,16 @@ use Mandango\Tests\TestCase;
 use Mandango\Factory\Factory;
 
 class FactoryTest extends TestCase {
-    public function testConstructor() {
-        $factory = new Factory($this->mandango);
+    public function testConstructor() 
+    {
+        $factory = new Factory($this->mandango, $this->faker);
         $this->assertInstanceOf('Mandango\Mandango', $factory->getMandango());
     }
 
 
     public function testGenerateContainers()
     {
-        $factory = new Factory($this->mandango);
+        $factory = new Factory($this->mandango, $this->faker);
         $factory->setConfigClasses(self::$staticConfigClasses);
 
 
