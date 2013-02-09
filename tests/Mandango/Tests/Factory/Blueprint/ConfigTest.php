@@ -23,20 +23,52 @@ class ConfigTest extends TestCase {
         $this->assertFalse($this->instance->hasField('foo'));
     }
 
-    public function testIsMandatory()
+    public function testMandatory()
     {
         $this->assertTrue($this->instance->isMandatory('title'));
-        $this->assertFalse($this->instance->isMandatory('line'));    
+        $this->assertFalse($this->instance->isMandatory('line'));   
+
+        $this->instance->setMandatory('line', true);
+        $this->assertTrue($this->instance->isMandatory('line'));
+
     }
 
-    public function testGetType()
+    public function testType()
     {
         $this->assertSame('date', $this->instance->getType('createdAt'));
+    }
+
+
+    public function testValue()
+    {
+        $value = 10;
+        $this->instance->setValue('createdAt', $value);
+        $this->assertSame($value, $this->instance->getValue('createdAt'));
     }
 
     public function testGetMandatory()
     {
         $this->assertTrue(count($this->instance->getMandatory()) > 0);
+    }  
+
+    public function testFixOverrides()
+    {
+        $overrides = Array('line' => 10);
+        $return = $this->instance->fixOverrides($overrides);
+
+        $this->assertTrue(isset($return['line']));
+
+        $overrides = Array('line', 'text');
+        $return = $this->instance->fixOverrides($overrides);
+
+        $this->assertTrue(array_key_exists('text', $return));
+        $this->assertTrue(array_key_exists('line', $return));
+
+        $overrides = Array('line' => 'test', 'text');
+        $return = $this->instance->fixOverrides($overrides);
+
+        $this->assertTrue(array_key_exists('text', $return));
+        $this->assertTrue(array_key_exists('line', $return));
     }  
 
     public function testGetDefaults()

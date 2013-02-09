@@ -16,7 +16,7 @@ class Config {
 
         $this->setConfigBase();
         $this->setConfigValidation();
-        $this->setConfigIndex();
+        $this->setConfigFake();
     }
 
     public function getDocumentClass() 
@@ -38,7 +38,7 @@ class Config {
         $type = $this->getType($field);
         $value = $this->getValue($field);
         $config = $this->getConfig($field);
-        if ( $override ) $config['value'] = $override;
+        if ( $override !== null ) $config['value'] = $override;
 
         if ( $value instanceOf \Closure ) return $value;
     
@@ -53,6 +53,8 @@ class Config {
     }
 
     public function getDefaults($overrides = array()) {
+        $overrides = $this->fixOverrides($overrides);
+
         $defaults = array();
         foreach( $this->getMandatory() as $field ) {
             $value = null;
@@ -102,12 +104,24 @@ class Config {
 
     public function setValue($field, $value) 
     {
-        $this->config[$field]['value'] = $value;
+        if ( $value === null ) return null;
+        else return $this->config[$field]['value'] = $value;
     }
 
     public function setMandatory($field, $value) 
     {
         $this->config[$field]['mandatory'] = $value;
+    }
+
+    public function fixOverrides($overrides) 
+    {
+        $output = array();
+        foreach($overrides as $key => $value) {
+            if ( is_numeric($key) ) $output[$value] = null;
+            else $output[$key] = $value;
+        }
+
+        return $output;
     }
 
     private function setConfigBase() 
@@ -139,11 +153,11 @@ class Config {
         return $this->config;
     }
 
-    private function setConfigIndex() 
+    private function setConfigFake() 
     {
-        foreach ($this->configClass['indexes'] as $index) {
-            foreach($index['keys'] as $key) {
-                
+        foreach ($this->configClass['fields'] as $name => &$field) {
+            if ( isset($field['fake']) ) {
+                $this->config[$name]['value'] = $field['fake'];
             }
         }
     }

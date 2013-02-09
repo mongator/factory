@@ -39,6 +39,7 @@ class Blueprint {
 
     public function applyOverrides(array $overrides)
     {
+        $overrides = $this->config->fixOverrides($overrides);
         foreach ($overrides as $field => &$value ) {
             $this->config->setValue($field, $value);
             $this->config->setMandatory($field, true);

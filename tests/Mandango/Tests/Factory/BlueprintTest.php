@@ -60,19 +60,19 @@ class BlueprintTest extends TestCase {
         $factory->setConfigClasses(self::$staticConfigClasses);
 
         $blueprint = new Blueprint($factory, 'Model\Article', array(
-            'votes' => 2,
+            'points' => 2,
             'text' => 'faker::paragraph(2)',
             'line' => 'faker::name',
             'title' => 'text example %s',
-            'updatedAt' => '1st May 2010, 01:30:00'
+            'updatedAt' => '1st May 2010, 01:30:00',
+            'votes'
+
         ));
 
         $data = $blueprint->buildData();
-
-        $this->assertEquals(2, $data['votes']);
+        $this->assertEquals(2, $data['points']);
         $this->assertEquals('text example 0', $data['title']);
         $this->assertEquals(strtotime('1st May 2010, 01:30:00'), $data['updatedAt']->sec);
-
     }
 
 

@@ -5,7 +5,7 @@ return array(
         'useBatchInsert' => true,
         'collection' => 'articles',
         'fields' => array(
-            'title'    => array(
+            'title' => array(
                 'type' => 'string',
                 'validation' => array(
                     array('NotBlank' => NULL),
@@ -22,13 +22,17 @@ return array(
                     ),
                 ),
             ),
-            'position'    => array(
+            'position' => array(
                 'type' => 'integer',
                 'validation' => array(
                     array('NotBlank' => NULL),
                 ),
             ),
-            'votes'    => 'integer',
+            'votes' => array(
+                'type' => 'integer',
+                'fake' => '###########'
+            ),
+            'points' => 'integer',
             'line'     => 'string',
             'text'     => 'string',
             'isActive' => 'boolean',

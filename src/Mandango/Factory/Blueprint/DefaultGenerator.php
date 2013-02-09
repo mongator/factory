@@ -12,20 +12,22 @@ final class DefaultGenerator {
 
     static function float(Factory $factory, $name, array $config) {
         return function($sequence = null) use ($factory, $name, $config) {
-            return (float)$factory->getFaker()->numerify($config['value'])/10;
+            if ( is_numeric($config['value']) ) return $config['value'];
+            return (float)$factory->getFaker()->numerify($config['value'])/100;
         };
     }    
 
     static function string(Factory $factory, $name, array $config) {
         if ( $config['value'] === null ) $config['value'] = 'faker::sentence(6)';
         return function($sequence = null) use ($factory, $name, $config) {
-            return static::generate($factory->getFaker(), $sequence, $config['value']);
+            $string = static::generate($factory->getFaker(), $config['value']);
+            return sprintf($string, $sequence);
         };
     }       
    
     static function boolean(Factory $factory, $name, array $config) {
         return function($sequence = null) use ($factory, $name, $config) {
-            if ( $config['value'] !== null ) return $value;
+            if ( $config['value'] !== null ) return $config['value'];
             return $factory->getFaker()->randomElement(array(true, false));
         };
     }   
@@ -35,18 +37,33 @@ final class DefaultGenerator {
             $value = $config['value'];
             if ( !$value ) $timestamp = time();
             else if ( is_integer($value) || is_float($value) ) $timestamp = $value;
-            else $timestamp = strtotime($value);
+            else {
+                $generated = static::generate($factory->getFaker(), $config['value']);
+                if ( $generated == $config['value'] ) {
+                    $timestamp = strtotime($generated);
+                } else {
+                    if ( !$generated instanceOf \DateTime ) {
+                        throw new \InvalidArgumentException(
+                            'Unexpected faker method, must return a DateTime object'
+                        );
+                    }
+                    $timestamp = $generated->getTimestamp();
+                }
+            }
 
             return new \MongoDate($timestamp);
         };
     }    
 
-    static function generate(Generator $faker, $sequence, $string) {
-        preg_match('/^faker::([a-zA-Z]*)\(?(.*)\)?/', $string, $results);
-        if ( count($results) == 0 ) return sprintf($string, $sequence);
+    static function generate(Generator $faker, $string) {
+        preg_match('/^faker::([a-zA-Z]*)\(?([a-zA-Z0-9 ,#\?\-\:]*)\)?/', $string, $results);
+        if ( count($results) == 0 ) return $string;
         else if ( count($results) == 2 ) return $faker->$results[1];
         else if ( count($results) == 3 ) {
-            return call_user_func(array($faker, $results[1]), $results[2]);
+            return call_user_func_array(
+                array($faker, $results[1]), 
+                explode(',', $results[2])
+            );
         }
     }
 }
