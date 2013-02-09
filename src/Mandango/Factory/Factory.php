@@ -1,20 +1,31 @@
 <?php
 namespace Mandango\Factory;
 use Mandango\Mandango;
+use Faker\Factory as FakerFactory;
 
 class Factory {
+    const DEFAULT_LOCALE = 'en_US';
+
     private $mandango;
+    private $faker;
     private $configClasses;
 
-    public function __construct(Mandango $mandango)
+    public function __construct(Mandango $mandango, $locale = self::DEFAULT_LOCALE)
     {
         $this->mandango = $mandango;
+        $this->faker = FakerFactory::create($locale);
+
         $this->configClasses = array();
     }
 
     public function getMandango()
     {
         return $this->mandango;
+    }
+
+    public function getFaker()
+    {
+        return $this->faker;
     }
 
     public function setConfigClass($class, array $configClass)
@@ -32,7 +43,7 @@ class Factory {
 
     public function hasConfigClass($class)
     {
-        return array_key_exists($class, $this->configClasses);
+        return isset($this->configClasses[$class]);
     }
 
     public function getConfigClasses()

@@ -46,7 +46,7 @@ class ConfigTest extends TestCase {
 
         foreach( $defaults as $closure ) {
             $this->assertInstanceOf('Closure', $closure);
-            $this->assertTrue((boolean)$closure(1));
+            $this->assertTrue($closure(1) !== null);
         }
     }  
 

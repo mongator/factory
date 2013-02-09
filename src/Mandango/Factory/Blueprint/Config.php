@@ -34,23 +34,37 @@ class Config {
         return $fields;
     }
 
-    public function getDefault($field) {
+    public function getDefault($field, $override = null) {
         $type = $this->getType($field);
+        $value = $this->getValue($field);
+        $config = $this->getConfig($field);
+        if ( $override ) $config['value'] = $override;
 
+        if ( $value instanceOf \Closure ) return $value;
+    
         if( method_exists(static::GENERATOR, $type) ) {
             return forward_static_call(
                 static::GENERATOR . "::" . $type, 
-                $this->factory, $field, $this->config[$field]
+                $this->factory, $field, $config
             );
         }
 
         return null;
     }
 
-    public function getDefaults() {
+    public function getDefaults($overrides = array()) {
         $defaults = array();
         foreach( $this->getMandatory() as $field ) {
-            $defaults[$field] = $this->getDefault($field);
+            $value = null;
+            if ( isset($overrides[$field]) ) {
+                $value = $overrides[$field];
+                if ( $value instanceOf \Closure ) {
+                    $defaults[$field] = $value;
+                    continue;
+                } 
+            }
+
+            $defaults[$field] = $this->getDefault($field, $value);
         }
 
         return $defaults;
@@ -74,10 +88,26 @@ class Config {
         return $this->config[$field]['type'];
     }
 
+    public function getValue($field) 
+    {
+        if ( !$this->hasField($field) ) return null;
+        return $this->config[$field]['value'];
+    }
+
     public function getConfig($field) 
     {
         if ( !$this->hasField($field) ) return null;
         return $this->config[$field];
+    }
+
+    public function setValue($field, $value) 
+    {
+        $this->config[$field]['value'] = $value;
+    }
+
+    public function setMandatory($field, $value) 
+    {
+        $this->config[$field]['mandatory'] = $value;
     }
 
     private function setConfigBase() 
@@ -102,6 +132,7 @@ class Config {
             }
 
             $this->config[$field['dbName']]['type'] = $field['type'];
+            $this->config[$field['dbName']]['value'] = null;
         }
 
         unset($field);

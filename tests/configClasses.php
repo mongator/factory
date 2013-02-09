@@ -22,12 +22,23 @@ return array(
                     ),
                 ),
             ),
-            'content'  => 'string',
-            'note'     => 'string',
+            'position'    => array(
+                'type' => 'integer',
+                'validation' => array(
+                    array('NotBlank' => NULL),
+                ),
+            ),
+            'votes'    => 'integer',
             'line'     => 'string',
             'text'     => 'string',
             'isActive' => 'boolean',
-            'date'     => 'date',
+            'createdAt'     => array(
+                'type' => 'date',
+                'validation' => array(
+                    array('NotBlank' => NULL),
+                ),
+            ),
+            'updatedAt'     => 'date',
             'database' => array('dbName' => 'basatos', 'type' => 'string'),
         ),
         'embeddedsOne' => array(

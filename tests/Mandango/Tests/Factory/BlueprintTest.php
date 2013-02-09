@@ -5,39 +5,75 @@ use Mandango\Factory\Factory;
 use Mandango\Factory\Blueprint;
 
 class BlueprintTest extends TestCase {
-    public function testGenerateContainers()
+    protected $configClass;
+
+    public function testBasic()
     {
         $factory = new Factory($this->mandango);
         $factory->setConfigClasses(self::$staticConfigClasses);
 
         $blueprint = new Blueprint($factory, 'Model\Article');
-        print_r($blueprint->getConfig());
+       // print_r($blueprint->buildData());
 
+        $this->assertTrue(is_array($blueprint->buildData()));
+    }
 
-        //var_dump($factory->getConfigClasses());
-/*
-        $containers = $mondator->generateContainers();
+    public function testDefaulstInConstructor()
+    {
+        $factory = new Factory($this->mandango);
+        $factory->setConfigClasses(self::$staticConfigClasses);
 
-        $this->assertSame(3, count($containers));
-        $this->assertTrue(isset($containers['_global']));
-        $this->assertTrue(isset($containers['Article']));
-        $this->assertTrue(isset($containers['Category']));
-        $this->assertInstanceOf('Mandango\Mondator\Container', $containers['Article']);
-        $this->assertInstanceOf('Mandango\Mondator\Container', $containers['Category']);
+        $blueprint = new Blueprint($factory, 'Model\Article', array(
+            'votes' => function () { return rand(0, 100); }
+        ));
 
-        $definitions = $containers['Article'];
-        $this->assertSame(2, count($definitions->getDefinitions()));
-        $this->assertTrue(isset($definitions['name']));
-        $this->assertTrue(isset($definitions['myclass']));
-        $this->assertSame('foo', $definitions['name']->getClassName());
+        $data = $blueprint->buildData();
+       //   print_r($data);
+        $this->assertTrue(isset($data['votes']));
+    }
 
-        $definitions = $containers['Category'];
-        $this->assertSame(2, count($definitions->getDefinitions()));
-        $this->assertTrue(isset($definitions['name']));
-        $this->assertTrue(isset($definitions['myclass']));
-        $this->assertSame('bar', $definitions['name']->getClassName());*/
+    public function testDefaulstInBuild()
+    {
+        $factory = new Factory($this->mandango);
+        $factory->setConfigClasses(self::$staticConfigClasses);
+
+        $blueprint = new Blueprint($factory, 'Model\Article', array(
+            'votes' => function () { return rand(0, 100); }
+        ));
+
+        $data = $blueprint->buildData(array(
+            'votes' => function () { return rand(200, 300); }
+        ));
+
+        $this->assertTrue(isset($data['votes']));
+        $this->assertTrue($data['votes'] >= 200);
+
+        $data = $blueprint->buildData();
+
+        $this->assertTrue(isset($data['votes']));
+        $this->assertTrue($data['votes'] < 200);
+    }
+
+    public function testDefaulsStringValue()
+    {
+        $factory = new Factory($this->mandango);
+        $factory->setConfigClasses(self::$staticConfigClasses);
+
+        $blueprint = new Blueprint($factory, 'Model\Article', array(
+            'votes' => 2,
+            'text' => 'faker::paragraph(2)',
+            'line' => 'faker::name',
+            'title' => 'text example %s',
+            'updatedAt' => '1st May 2010, 01:30:00'
+        ));
+
+        $data = $blueprint->buildData();
+
+        $this->assertEquals(2, $data['votes']);
+        $this->assertEquals('text example 0', $data['title']);
+        $this->assertEquals(strtotime('1st May 2010, 01:30:00'), $data['updatedAt']->sec);
+
     }
 
 
-   
 }
