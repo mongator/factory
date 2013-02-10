@@ -170,7 +170,12 @@ return array(
     'Model\Source' => array(
         'isEmbedded' => true,
         'fields' => array(
-            'name' => 'string',
+            'name' => array(
+                'type' => 'string',
+                'validation' => array(
+                    array('NotBlank' => NULL),
+                ),
+            ),
             'text' => 'string',
             'note' => 'string',
             'line' => 'string',

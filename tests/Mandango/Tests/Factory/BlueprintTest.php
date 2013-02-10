@@ -90,12 +90,16 @@ class BlueprintTest extends TestCase {
         $factory = new Factory($this->mandango, $this->faker);
         $factory->setConfigClasses(self::$staticConfigClasses);
 
-        $blueprint = new Blueprint($factory, 'Model\Article', array('author', 'categories'));
+        $blueprint = new Blueprint($factory, 
+            'Model\Article', 
+            array('author', 'categories', 'source')
+        );
+
         $document = $blueprint->create();
 
         $this->assertInstanceOf('Model\Article', $document);
 
-        $blueprint->recall();
+//        $blueprint->recall();
 
         $result = $this->mandango
             ->getRepository('Model\Article')

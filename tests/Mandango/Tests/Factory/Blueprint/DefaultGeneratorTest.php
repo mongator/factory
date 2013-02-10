@@ -178,7 +178,7 @@ class DefaultGeneratorTest extends TestCase {
             'value' => null
         ));
 
-        $this->assertInstanceOf('Model\Source', $closure());
+        $this->assertTrue(is_array($closure()));
 
 
         $closure = DefaultGenerator::embeddedsOne($this->factory, 'test', array(
@@ -196,7 +196,7 @@ class DefaultGeneratorTest extends TestCase {
             'value' => $this->factory->getMandango()->create('Model\Source')
         ));
 
-        $this->assertInstanceOf('Model\Source', $closure());
+        $this->assertTrue(is_array($closure()));
     }  
 
     public function testEmbeddedsMany()
@@ -206,7 +206,7 @@ class DefaultGeneratorTest extends TestCase {
             'value' => null
         ));
 
-        $this->assertInstanceOf('Model\Source', current($closure()));
+        $this->assertTrue(is_array(current($closure())));
 
         $closure = DefaultGenerator::embeddedsMany($this->factory, 'test', array(
             'class' => 'Model\Source',

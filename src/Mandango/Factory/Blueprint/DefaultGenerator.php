@@ -131,10 +131,10 @@ final class DefaultGenerator {
     static private function embedded(Factory $factory, $class, $value = null) 
     {
         if ( !$value ) $value = array();
-        else if ( $value instanceOf $class ) return $value;
+        else if ( $value instanceOf $class ) return $value->toArray();
 
         $bp = new Blueprint($factory, $class);
-        return $bp->create($value);
+        return $bp->build($value);
     }
 
     static private function reference($value = null) 
