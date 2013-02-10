@@ -186,10 +186,10 @@ class DefaultGeneratorTest extends TestCase {
             'value' => ['name' => 'faker::name', 'text']
         ));
 
-        $data = $closure()->toArray();
+        $data = $closure();
         $this->assertTrue(strlen($data['name']) > 0);
         $this->assertTrue(strlen($data['text']) > 0);
-        $this->assertTrue(strlen($data['note']) == 0);
+        $this->assertFalse(isset($data['note']));
 
         $closure = DefaultGenerator::embeddedsOne($this->factory, 'test', array(
             'class' => 'Model\Source',
@@ -218,12 +218,8 @@ class DefaultGeneratorTest extends TestCase {
 
         $result = $closure(); 
         $this->assertEquals(2, count($result));
-
-        $data = $result[0]->toArray();
-        $this->assertTrue(strlen($data['text']) > 0);
-
-        $data = $result[1]->toArray();
-        $this->assertTrue(strlen($data['name']) > 0);
+        $this->assertTrue(strlen($result[0]['text']) > 0);
+        $this->assertTrue(strlen($result[1]['name']) > 0);
 
         $closure = DefaultGenerator::embeddedsMany($this->factory, 'test', array(
             'class' => 'Model\Source',
@@ -232,6 +228,6 @@ class DefaultGeneratorTest extends TestCase {
 
         $result = $closure(); 
         $this->assertEquals(3, count($result));
-        foreach($result as $id) $this->assertInstanceOf('Model\Source', $id);
+        foreach($result as $id) $this->assertTrue(is_array($id));
     }  
 }

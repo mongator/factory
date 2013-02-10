@@ -92,14 +92,14 @@ class BlueprintTest extends TestCase {
 
         $blueprint = new Blueprint($factory, 
             'Model\Article', 
-            array('author', 'categories', 'source')
+            array('author', 'categories', 'source', 'comments' => 5)
         );
 
         $document = $blueprint->create();
 
         $this->assertInstanceOf('Model\Article', $document);
 
-//        $blueprint->recall();
+        $blueprint->recall();
 
         $result = $this->mandango
             ->getRepository('Model\Article')
