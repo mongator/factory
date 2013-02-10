@@ -13,9 +13,8 @@ class BlueprintTest extends TestCase {
         $factory->setConfigClasses(self::$staticConfigClasses);
 
         $blueprint = new Blueprint($factory, 'Model\Article');
-       // print_r($blueprint->buildData());
 
-        $this->assertTrue(is_array($blueprint->buildData()));
+        $this->assertTrue(is_array($blueprint->build()));
     }
 
     public function testDefaulstInConstructor()
@@ -27,7 +26,7 @@ class BlueprintTest extends TestCase {
             'votes' => function () { return rand(0, 100); }
         ));
 
-        $data = $blueprint->buildData();
+        $data = $blueprint->build();
         $this->assertTrue(isset($data['votes']));
     }
 
@@ -40,14 +39,14 @@ class BlueprintTest extends TestCase {
             'votes' => function () { return rand(0, 100); }
         ));
 
-        $data = $blueprint->buildData(array(
+        $data = $blueprint->build(array(
             'votes' => function () { return rand(200, 300); }
         ));
 
         $this->assertTrue(isset($data['votes']));
         $this->assertTrue($data['votes'] >= 200);
 
-        $data = $blueprint->buildData();
+        $data = $blueprint->build();
 
         $this->assertTrue(isset($data['votes']));
         $this->assertTrue($data['votes'] < 200);
@@ -68,11 +67,35 @@ class BlueprintTest extends TestCase {
 
         ));
 
-        $data = $blueprint->buildData();
+        $data = $blueprint->build();
         $this->assertEquals(2, $data['points']);
         $this->assertEquals('text example 0', $data['title']);
-        $this->assertEquals(strtotime('1st May 2010, 01:30:00'), $data['updatedAt']->sec);
+        $this->assertEquals(
+            strtotime('1st May 2010, 01:30:00'), 
+            $data['updatedAt']->getTimestamp()
+        );
     }
 
+    public function testCreateAndRecall()
+    {
+        $factory = new Factory($this->mandango, $this->faker);
+        $factory->setConfigClasses(self::$staticConfigClasses);
+
+        $blueprint = new Blueprint($factory, 'Model\Article');
+        $document = $blueprint->create();
+
+        $this->assertInstanceOf('Model\Article', $document);
+
+        $blueprint->recall();
+
+        $result = $this->mandango
+            ->getRepository('Model\Article')
+            ->createQuery()
+            ->criteria(array('_id' => $document->getId()))
+            ->one();
+
+        $this->assertTrue($result === null);
+
+    }
 
 }

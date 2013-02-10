@@ -17,6 +17,12 @@ class DefaultGeneratorTest extends TestCase {
     public function testInteger()
     {
         $closure = DefaultGenerator::integer($this->factory, 'test', array(
+            'value' => null
+        ));
+
+        $this->assertTrue($closure() > 0);
+
+        $closure = DefaultGenerator::integer($this->factory, 'test', array(
             'value' => 1
         ));
 
@@ -89,7 +95,7 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $result = $closure();
-        $this->assertEquals($now, $result->sec);
+        $this->assertEquals($now, $result->getTimestamp());
 
         $now = time();
         $closure = DefaultGenerator::date($this->factory, 'test', array(
@@ -97,7 +103,7 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $result = $closure();
-        $this->assertEquals($now, $result->sec);
+        $this->assertEquals($now, $result->getTimestamp());
 
         $time = '21-10-2012';
         $closure = DefaultGenerator::date($this->factory, 'test', array(
@@ -105,7 +111,7 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $result = $closure();
-        $this->assertEquals(strtotime($time), $result->sec);
+        $this->assertEquals(strtotime($time), $result->getTimestamp());
        
         $closure = DefaultGenerator::date($this->factory, 'test', array(
             'value' => 'faker::dateTimeBetween(-20 years, -10 years)'
@@ -113,8 +119,8 @@ class DefaultGeneratorTest extends TestCase {
 
         $result = $closure();
         $this->assertTrue(( 
-            $result->sec >= strtotime('-20 years') && 
-            $result->sec <= strtotime('-10 years')
+            $result->getTimestamp() >= strtotime('-20 years') && 
+            $result->getTimestamp() <= strtotime('-10 years')
         ));        
     }  
 }

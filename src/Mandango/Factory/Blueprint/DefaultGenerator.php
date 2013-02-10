@@ -6,6 +6,7 @@ use Faker\Generator;
 final class DefaultGenerator {
     static function integer(Factory $factory, $name, array $config) {
         return function($sequence = null) use ($factory, $name, $config) {
+            if ( $config['value'] === null ) $config['value'] = '###';
             return (int)$factory->getFaker()->numerify($config['value']);
         };
     }
@@ -47,11 +48,14 @@ final class DefaultGenerator {
                             'Unexpected faker method, must return a DateTime object'
                         );
                     }
-                    $timestamp = $generated->getTimestamp();
+                    
+                    return $generated;
                 }
             }
 
-            return new \MongoDate($timestamp);
+            $date = new \DateTime();
+            $date->setTimestamp($timestamp);
+            return $date;
         };
     }    
 

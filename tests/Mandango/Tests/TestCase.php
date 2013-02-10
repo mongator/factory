@@ -40,7 +40,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
 
         if (!static::$staticMandango) {
-            static::$staticMandango = new Mandango(new $this->metadataFactoryClass, new ArrayCache(), function($log) {});
+            static::$staticMandango = new Mandango(new $this->metadataFactoryClass, new ArrayCache());
             static::$staticMandango->setConnection('default', $this->connection);
             static::$staticMandango->setDefaultConnectionName('default');
         }
@@ -63,7 +63,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->db = $this->connection->getMongoDB();
 
         foreach ($this->db->listCollections() as $collection) {
-            $collection->drop();
+          //  $collection->drop();
         }
     }
 

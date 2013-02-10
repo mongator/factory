@@ -11,6 +11,7 @@ class Blueprint {
 
     protected $defaults;
     protected $sequence;
+    protected $documents = array();
 
     public function __construct(Factory $factory, $documentClass, array $overrides = array()) 
     {
@@ -46,7 +47,7 @@ class Blueprint {
         }
     }
 
-    public function buildData(array $overrides = array())
+    public function build(array $overrides = array())
     {
         $position = $this->sequence->getNext();
         foreach ($this->config->getDefaults($overrides) as $field => $default) {
@@ -56,32 +57,21 @@ class Blueprint {
         return $data;
     }
 
-    /*
-     * Create document in the database and return it.
-     *
-     * @param array $overrides field => value pairs which override the defaults for this blueprint
-     * @param array $associated [name] => [Association] pairs
-     * @return array the created document
-     */
-    public function create($overrides = array(), $associated = array()) {
-        $data = $this->build($overrides, $associated);
-        $this->_collection->insert($data,array("safe"=>true));
-        return $data;
+    public function create($overrides = array(), $autosave = true) 
+    {
+        $data = $this->build($overrides);
+        
+        $this->documents[] = $document = $this->factory->getMandango()->create($this->class);
+        $document->fromArray($data);
+
+        if ( $autosave ) $document->save();
+        return $document;
     }
 
-    /*
-     * Empty the collection in the database.
-     */
-    public function recall() {
-        $this->_collection->remove();
-    }
-
-    protected function _evalSequence(&$data) {
-        $n = $this->_sequence->next();
-        array_walk_recursive($data,function(&$value) use ($n) {
-            if(is_string($value) && false !== strpos($value, '$')) {
-                $value = eval('return "'. stripslashes($value) . '";');
-            }
-        });
+    public function recall() 
+    {
+        return $this->factory->getMandango()
+            ->getRepository($this->class)
+            ->delete($this->documents);
     }
 }
