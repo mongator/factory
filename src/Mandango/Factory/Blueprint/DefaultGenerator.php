@@ -4,21 +4,24 @@ use Mandango\Factory\Factory;
 use Faker\Generator;
 
 final class DefaultGenerator {
-    static public function integer(Factory $factory, $name, array $config) {
+    static public function integer(Factory $factory, $name, array $config) 
+    {
         return function($sequence = null) use ($factory, $name, $config) {
             if ( $config['value'] === null ) $config['value'] = '###';
             return (int)$factory->getFaker()->numerify($config['value']);
         };
     }
 
-    static public function float(Factory $factory, $name, array $config) {
+    static public function float(Factory $factory, $name, array $config) 
+    {
         return function($sequence = null) use ($factory, $name, $config) {
             if ( is_numeric($config['value']) ) return $config['value'];
             return (float)$factory->getFaker()->numerify($config['value'])/100;
         };
     }    
 
-    static public function string(Factory $factory, $name, array $config) {
+    static public function string(Factory $factory, $name, array $config) 
+    {
         if ( $config['value'] === null ) $config['value'] = 'faker::sentence(6)';
         return function($sequence = null) use ($factory, $name, $config) {
             $string = static::generate($factory->getFaker(), $config['value']);
@@ -26,14 +29,16 @@ final class DefaultGenerator {
         };
     }       
    
-    static public function boolean(Factory $factory, $name, array $config) {
+    static public function boolean(Factory $factory, $name, array $config) 
+    {
         return function($sequence = null) use ($factory, $name, $config) {
             if ( $config['value'] !== null ) return $config['value'];
             return $factory->getFaker()->randomElement(array(true, false));
         };
     }   
 
-    static public function date(Factory $factory, $name, array $config) {
+    static public function date(Factory $factory, $name, array $config) 
+    {
         return function($sequence = null) use ($factory, $name, $config) {
             $value = $config['value'];
             if ( !$value ) $timestamp = time();
@@ -59,13 +64,22 @@ final class DefaultGenerator {
         };
     }    
 
-    static public function referencesOne(Factory $factory, $name, array $config) {
+    static public function embeddedsOne(Factory $factory, $name, array $config) 
+    {
+        return function($sequence = null) use ($factory, $name, $config) {
+            print_r($config);
+        };
+    }    
+
+    static public function referencesOne(Factory $factory, $name, array $config) 
+    {
         return function($sequence = null) use ($factory, $name, $config) {
             return static::mongoId($config['value']);
         };
     }    
 
-    static public function referencesMany(Factory $factory, $name, array $config) {
+    static public function referencesMany(Factory $factory, $name, array $config) 
+    {
         return function($sequence = null) use ($factory, $name, $config) {
             $value = $config['value'];
             $ids = array();
@@ -86,7 +100,8 @@ final class DefaultGenerator {
         };
     }   
 
-    static private function mongoId($value = null) {
+    static private function mongoId($value = null) 
+    {
         if ( !$value ) return new \MongoId();
         else if ( $value instanceOf \MongoId ) return $value;
         else {
@@ -94,7 +109,8 @@ final class DefaultGenerator {
         }
     }
 
-    static private function generate(Generator $faker, $string) {
+    static private function generate(Generator $faker, $string) 
+    {
         preg_match('/^faker::([a-zA-Z]*)\(?([a-zA-Z0-9 ,#\?\-\:]*)\)?/', $string, $results);
         if ( count($results) == 0 ) return $string;
         else if ( count($results) == 2 ) return $faker->$results[1];

@@ -10,37 +10,28 @@ class FactoryTest extends TestCase {
         $this->assertInstanceOf('Mandango\Mandango', $factory->getMandango());
     }
 
-
-    public function testGenerateContainers()
+    public function testConfigs()
     {
         $factory = new Factory($this->mandango, $this->faker);
         $factory->setConfigClasses(self::$staticConfigClasses);
 
-
-        //var_dump($factory->getConfigClasses());
-/*
-        $containers = $mondator->generateContainers();
-
-        $this->assertSame(3, count($containers));
-        $this->assertTrue(isset($containers['_global']));
-        $this->assertTrue(isset($containers['Article']));
-        $this->assertTrue(isset($containers['Category']));
-        $this->assertInstanceOf('Mandango\Mondator\Container', $containers['Article']);
-        $this->assertInstanceOf('Mandango\Mondator\Container', $containers['Category']);
-
-        $definitions = $containers['Article'];
-        $this->assertSame(2, count($definitions->getDefinitions()));
-        $this->assertTrue(isset($definitions['name']));
-        $this->assertTrue(isset($definitions['myclass']));
-        $this->assertSame('foo', $definitions['name']->getClassName());
-
-        $definitions = $containers['Category'];
-        $this->assertSame(2, count($definitions->getDefinitions()));
-        $this->assertTrue(isset($definitions['name']));
-        $this->assertTrue(isset($definitions['myclass']));
-        $this->assertSame('bar', $definitions['name']->getClassName());*/
+        $this->assertTrue($factory->hasConfigClass('Model\Article'));
     }
 
+    public function testBlueprint()
+    {
+        $factory = new Factory($this->mandango, $this->faker);
+        $factory->setConfigClasses(self::$staticConfigClasses);
 
-   
+        $this->assertTrue($factory->hasConfigClass('Model\Article'));
+        $this->assertFalse($factory->hasBlueprint('Article'));
+
+        $blueprint = $factory->define('Article', 'Model\Article');
+        $this->assertInstanceOf('Mandango\Factory\Blueprint', $blueprint);
+
+        $this->assertTrue($factory->hasBlueprint('Article'));
+
+        $document = $factory->create('Article', array(), false);
+        $this->assertInstanceOf('Model\Article', $document);
+    }
 }

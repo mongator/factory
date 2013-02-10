@@ -14,8 +14,9 @@ class Config {
         $this->factory = $factory;
         $this->class = $documentClass;
 
-        $this->setConfigFields();
-        $this->setConfigReferences();
+        $this->parseAndCheckFields();
+        $this->parseAndCheckReferences();
+        $this->parseAndCheckEmbeddeds();
     }
 
     public function getDocumentClass() 
@@ -130,7 +131,7 @@ class Config {
         return $output;
     }
 
-    private function setConfigFields() 
+    private function parseAndCheckFields() 
     {
         foreach ($this->configClass['fields'] as $name => &$field) {
             if (is_string($field)) $field = array('type' => $field);
@@ -151,56 +152,85 @@ class Config {
                 throw new \RuntimeException(sprintf('The field "%s" of the class "%s" does not have type.', $name, $this->documentClass));
             }
 
-            $this->config[$name]['dbName'] = $field['dbName'];
-            $this->config[$name]['type'] = $field['type'];
-            $this->config[$name]['value'] = null;
-            
-            if ( isset($field['fake']) ) {
-                $this->config[$name]['value'] = $field['fake'];
-            }
-
-            if ( isset($field['validation']) ) {
-                foreach( $field['validation'] as $class => $validator ) {
-                    $this->setConfigValidationForField($name, $validator);
-                }
-            }
+            $this->parseField($field, $name);
         }
     }
 
 
-    private function setConfigReferences() 
+    private function parseAndCheckReferences() 
     {
         $merge = array();
         foreach ($this->configClass['referencesOne'] as $name => $reference) {
             $reference['type'] = 'referencesOne';
-            $merge[$name] = $reference;
+            if (!isset($reference['field'])) $reference['dbName'] = $name.'_reference_field';
+            else $reference['dbName'] = $reference['field'];
+            $this->parseAndCheckAssociationClass($reference, $name);
+
         }
 
         foreach ($this->configClass['referencesMany'] as $name => $reference) {
             $reference['type'] = 'referencesMany';
-            $merge[$name] = $reference;
-        }
-
-        foreach ($merge as $name => $reference) {
-            if (!isset($reference['field'])) {
-                $reference['field'] = $name.'_reference_field';
-            }
-
-            $this->config[$name]['type'] = $reference['type'];
-            $this->config[$name]['dbName'] = $reference['field'];
-            $this->config[$name]['value'] = null;
-            
-            if ( isset($field['fake']) ) {
-                $this->config[$name]['value'] = $field['fake'];
-            }
-
-            if ( isset($field['validation']) ) {
-                foreach( $field['validation'] as $class => $validator ) {
-                    $this->setConfigValidationForField($name, $validator);
-                }
-            }
+            if (!isset($reference['field'])) $reference['dbName'] = $name.'_reference_field';
+            else $reference['dbName'] = $reference['field'];
+            $this->parseAndCheckAssociationClass($reference, $name);
         }
     }
+
+    private function parseAndCheckEmbeddeds() 
+    {
+        foreach ($this->configClass['embeddedsOne'] as $name => &$embedded) {
+            $embedded['type'] = 'embeddedsOne';
+            $this->parseAndCheckAssociationClass($embedded, $name);
+        }
+
+        foreach ($this->configClass['embeddedsMany'] as $name => &$embedded) {
+            $embedded['type'] = 'embeddedsMany';
+            $this->parseAndCheckAssociationClass($embedded, $name);
+        }
+    }
+
+    private function parseAndCheckAssociationClass(&$field, $name)
+    {
+        if (!is_array($field)) {
+            throw new \RuntimeException(sprintf('The association "%s" of the class "%s" is not an array or string.', $name, $this->class));
+        }
+
+        if (isset($field['class'])) {
+            if (!is_string($field['class'])) {
+                throw new \RuntimeException(sprintf('The class of the association "%s" of the class "%s" is not an string.', $name, $this->class));
+            }
+
+            $this->config[$name]['class'] = $field['class'];
+        } elseif (isset($field['polymorphic'])) {
+           //TODO: Implement polymorphic references
+        } else {
+            throw new \RuntimeException(sprintf('The association "%s" of the class "%s" does not have class and it is not polymorphic.', $name, $this->class));
+        }
+
+        $this->parseField($field, $name);
+    }
+
+    private function parseField(&$field, $name) 
+    {
+        $this->config[$name]['type'] = $field['type'];
+        
+        $this->config[$name]['dbName'] = $name;
+        if ( isset($field['dbName']) ) {
+            $this->config[$name]['dbName'] = $field['dbName'];;
+        }
+
+        $this->config[$name]['value'] = null;
+        if ( isset($field['fake']) ) {
+            $this->config[$name]['value'] = $field['fake'];
+        }
+
+        if ( isset($field['validation']) ) {
+            foreach( $field['validation'] as $class => $validator ) {
+                $this->setConfigValidationForField($name, $validator);
+            }
+        }     
+    }
+
 
     private function setConfigValidationForField($name, array $validation) 
     {

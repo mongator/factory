@@ -65,7 +65,8 @@ class BlueprintTest extends TestCase {
             'updatedAt' => '1st May 2010, 01:30:00',
             'votes',
             'author',
-            'categories' => 2
+            'categories' => 2,
+            'source'
         ));
 
         $data = $blueprint->build(); 

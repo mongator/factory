@@ -28,6 +28,11 @@ class ConfigTest extends TestCase {
         $this->assertTrue($this->instance->hasField('author'));
     }
 
+    public function testHasKeyEmbeddeds()
+    {
+        $this->assertTrue($this->instance->hasField('source'));
+    }
+
     public function testMandatory()
     {
         $this->assertTrue($this->instance->isMandatory('title'));
