@@ -14,9 +14,8 @@ class Config {
         $this->factory = $factory;
         $this->class = $documentClass;
 
-        $this->setConfigBase();
-        $this->setConfigValidation();
-        $this->setConfigFake();
+        $this->setConfigFields();
+        $this->setConfigReferences();
     }
 
     public function getDocumentClass() 
@@ -57,16 +56,17 @@ class Config {
 
         $defaults = array();
         foreach( $this->getMandatory() as $field ) {
+            $dbName = $this->getDbName($field);
             $value = null;
             if ( isset($overrides[$field]) ) {
                 $value = $overrides[$field];
                 if ( $value instanceOf \Closure ) {
-                    $defaults[$field] = $value;
+                    $defaults[$dbName] = $value;
                     continue;
                 } 
             }
 
-            $defaults[$field] = $this->getDefault($field, $value);
+            $defaults[$dbName] = $this->getDefault($field, $value);
         }
 
         return $defaults;
@@ -94,6 +94,12 @@ class Config {
     {
         if ( !$this->hasField($field) ) return null;
         return $this->config[$field]['value'];
+    }
+
+    public function getDbName($field) 
+    {
+        if ( !$this->hasField($field) ) return null;
+        return $this->config[$field]['dbName'];
     }
 
     public function getConfig($field) 
@@ -124,7 +130,7 @@ class Config {
         return $output;
     }
 
-    private function setConfigBase() 
+    private function setConfigFields() 
     {
         foreach ($this->configClass['fields'] as $name => &$field) {
             if (is_string($field)) $field = array('type' => $field);
@@ -145,26 +151,14 @@ class Config {
                 throw new \RuntimeException(sprintf('The field "%s" of the class "%s" does not have type.', $name, $this->documentClass));
             }
 
-            $this->config[$field['dbName']]['type'] = $field['type'];
-            $this->config[$field['dbName']]['value'] = null;
-        }
-
-        unset($field);
-        return $this->config;
-    }
-
-    private function setConfigFake() 
-    {
-        foreach ($this->configClass['fields'] as $name => &$field) {
+            $this->config[$name]['dbName'] = $field['dbName'];
+            $this->config[$name]['type'] = $field['type'];
+            $this->config[$name]['value'] = null;
+            
             if ( isset($field['fake']) ) {
                 $this->config[$name]['value'] = $field['fake'];
             }
-        }
-    }
 
-    private function setConfigValidation() 
-    {
-        foreach ($this->configClass['fields'] as $name => &$field) {
             if ( isset($field['validation']) ) {
                 foreach( $field['validation'] as $class => $validator ) {
                     $this->setConfigValidationForField($name, $validator);
@@ -173,7 +167,42 @@ class Config {
         }
     }
 
-    private function setConfigValidationForField($name,  array $validation) 
+
+    private function setConfigReferences() 
+    {
+        $merge = array();
+        foreach ($this->configClass['referencesOne'] as $name => $reference) {
+            $reference['type'] = 'referencesOne';
+            $merge[$name] = $reference;
+        }
+
+        foreach ($this->configClass['referencesMany'] as $name => $reference) {
+            $reference['type'] = 'referencesMany';
+            $merge[$name] = $reference;
+        }
+
+        foreach ($merge as $name => $reference) {
+            if (!isset($reference['field'])) {
+                $reference['field'] = $name.'_reference_field';
+            }
+
+            $this->config[$name]['type'] = $reference['type'];
+            $this->config[$name]['dbName'] = $reference['field'];
+            $this->config[$name]['value'] = null;
+            
+            if ( isset($field['fake']) ) {
+                $this->config[$name]['value'] = $field['fake'];
+            }
+
+            if ( isset($field['validation']) ) {
+                foreach( $field['validation'] as $class => $validator ) {
+                    $this->setConfigValidationForField($name, $validator);
+                }
+            }
+        }
+    }
+
+    private function setConfigValidationForField($name, array $validation) 
     {
 
        $key = key($validation);

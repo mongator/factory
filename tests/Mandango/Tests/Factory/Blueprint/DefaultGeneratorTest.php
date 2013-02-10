@@ -123,4 +123,51 @@ class DefaultGeneratorTest extends TestCase {
             $result->getTimestamp() <= strtotime('-10 years')
         ));        
     }  
+
+    public function testReferencesOne()
+    {
+        $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
+            'value' => null
+        ));
+
+        $this->assertInstanceOf('MongoId', $closure());
+
+        $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
+            'value' => '49a7011a05c677b9a916612a'
+        ));
+
+        $this->assertEquals('49a7011a05c677b9a916612a', (string)$closure());
+
+        $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
+            'value' => new \MongoId('49a7011a05c677b9a916612a')
+        ));
+
+        $this->assertEquals('49a7011a05c677b9a916612a', (string)$closure());
+    }  
+
+    public function testReferencesMany()
+    {
+        $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
+            'value' => null
+        ));
+
+        $this->assertInstanceOf('MongoId', current($closure()));
+
+       
+        $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
+            'value' => ['49a7011a05c677b9a916612a']
+        ));
+
+
+        $this->assertEquals('49a7011a05c677b9a916612a', (string)current($closure()));
+       
+        $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
+            'value' => 3
+        ));
+
+        $result = $closure(); 
+        $this->assertEquals(3, count($result));
+
+        foreach($result as $id) $this->assertInstanceOf('MongoId', $id);
+    }  
 }

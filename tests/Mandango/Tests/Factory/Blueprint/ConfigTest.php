@@ -17,10 +17,15 @@ class ConfigTest extends TestCase {
         $this->instance = new Config($factory, 'Model\Article');
     }   
 
-    public function testHasKey()
+    public function testHasKeyFields()
     {
         $this->assertTrue($this->instance->hasField('line'));
         $this->assertFalse($this->instance->hasField('foo'));
+    }
+
+    public function testHasKeyReferences()
+    {
+        $this->assertTrue($this->instance->hasField('author'));
     }
 
     public function testMandatory()

@@ -63,11 +63,12 @@ class BlueprintTest extends TestCase {
             'line' => 'faker::name',
             'title' => 'text example %s',
             'updatedAt' => '1st May 2010, 01:30:00',
-            'votes'
-
+            'votes',
+            'author',
+            'categories' => 2
         ));
 
-        $data = $blueprint->build();
+        $data = $blueprint->build(); 
         $this->assertEquals(2, $data['points']);
         $this->assertEquals('text example 0', $data['title']);
         $this->assertEquals(
@@ -81,7 +82,7 @@ class BlueprintTest extends TestCase {
         $factory = new Factory($this->mandango, $this->faker);
         $factory->setConfigClasses(self::$staticConfigClasses);
 
-        $blueprint = new Blueprint($factory, 'Model\Article');
+        $blueprint = new Blueprint($factory, 'Model\Article', array('author', 'categories'));
         $document = $blueprint->create();
 
         $this->assertInstanceOf('Model\Article', $document);
