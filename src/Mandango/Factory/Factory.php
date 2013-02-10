@@ -79,4 +79,8 @@ class Factory {
 
         return $this->blueprints[$blueprintName]->create($overrides, $autosave);
     }
+
+    public function defineAndCreate($blueprintName) {
+        
+    }
 }
