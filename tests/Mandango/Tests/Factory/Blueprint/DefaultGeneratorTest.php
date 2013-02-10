@@ -198,4 +198,40 @@ class DefaultGeneratorTest extends TestCase {
 
         $this->assertInstanceOf('Model\Source', $closure());
     }  
+
+    public function testEmbeddedsMany()
+    {
+        $closure = DefaultGenerator::embeddedsMany($this->factory, 'test', array(
+            'class' => 'Model\Source',
+            'value' => null
+        ));
+
+        $this->assertInstanceOf('Model\Source', current($closure()));
+
+        $closure = DefaultGenerator::embeddedsMany($this->factory, 'test', array(
+            'class' => 'Model\Source',
+            'value' => array(
+                array('text'),
+                array('name')
+            )
+        ));
+
+        $result = $closure(); 
+        $this->assertEquals(2, count($result));
+
+        $data = $result[0]->toArray();
+        $this->assertTrue(strlen($data['text']) > 0);
+
+        $data = $result[1]->toArray();
+        $this->assertTrue(strlen($data['name']) > 0);
+
+        $closure = DefaultGenerator::embeddedsMany($this->factory, 'test', array(
+            'class' => 'Model\Source',
+            'value' => 3
+        ));
+
+        $result = $closure(); 
+        $this->assertEquals(3, count($result));
+        foreach($result as $id) $this->assertInstanceOf('Model\Source', $id);
+    }  
 }

@@ -69,20 +69,40 @@ final class DefaultGenerator {
     static public function embeddedsOne(Factory $factory, $name, array $config) 
     {
         return function($sequence = null) use ($factory, $name, $config) {
+            return static::embedded($factory, $config['class'], $config['value']);
+        };
+    }    
+
+    static public function embeddedsMany(Factory $factory, $name, array $config) 
+    {
+        return function($sequence = null) use ($factory, $name, $config) {
             $value = $config['value'];
+            $documents = array();
 
-            if ( !$value ) $config['value'] = array();
-            else if ( $value instanceOf $config['class'] ) return $value;
+            if ( !$value ) {
+                $documents[] = static::embedded($factory, $config['class']);
+            } else if ( is_numeric($value) ) {
+                for($i=0;$i<(int)$value;$i++) {
+                    $documents[] = static::embedded($factory, $config['class']);
+                }
+            } else if ( is_array($value) ) {
+                foreach($value as $default) {
+                    $documents[] = static::embedded($factory, $config['class'], $default);
+                }
+            } else {
+                throw new \InvalidArgumentException(
+                    'Unexpected default value for embeddedsMany field'
+                );
+            }
 
-            $bp = new Blueprint($factory, $config['class']);
-            return $bp->create($config['value']);
+            return $documents;
         };
     }    
 
     static public function referencesOne(Factory $factory, $name, array $config) 
     {
         return function($sequence = null) use ($factory, $name, $config) {
-            return static::mongoId($config['value']);
+            return static::reference($config['value']);
         };
     }    
 
@@ -93,11 +113,11 @@ final class DefaultGenerator {
             $ids = array();
 
             if ( !$value ) {
-                $ids[] = static::mongoId();
+                $ids[] = static::reference();
             } else if ( is_numeric($value) ) {
-                for($i=0;$i<(int)$value;$i++) $ids[] = static::mongoId();
+                for($i=0;$i<(int)$value;$i++) $ids[] = static::reference();
             } else if ( is_array($value) ) {
-                foreach($value as $id) $ids[] = static::mongoId($id);
+                foreach($value as $id) $ids[] = static::reference($id);
             } else {
                 throw new \InvalidArgumentException(
                     'Unexpected default value for referencesMany field'
@@ -108,7 +128,16 @@ final class DefaultGenerator {
         };
     }   
 
-    static private function mongoId($value = null) 
+    static private function embedded(Factory $factory, $class, $value = null) 
+    {
+        if ( !$value ) $value = array();
+        else if ( $value instanceOf $class ) return $value;
+
+        $bp = new Blueprint($factory, $class);
+        return $bp->create($value);
+    }
+
+    static private function reference($value = null) 
     {
         if ( !$value ) return new \MongoId();
         else if ( $value instanceOf \MongoId ) return $value;
