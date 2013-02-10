@@ -50,6 +50,7 @@ class Blueprint {
     public function build(array $overrides = array())
     {
         $position = $this->sequence->getNext();
+        $data = array();
         foreach ($this->config->getDefaults($overrides) as $field => $default) {
             if ( $default ) $data[$field] = $default($position);
         }
@@ -57,14 +58,14 @@ class Blueprint {
         return $data;
     }
 
-    public function create($overrides = array(), $autosave = true) 
+    public function create(array $overrides = array(), $autosave = true) 
     {
         $data = $this->build($overrides);
         
         $this->documents[] = $document = $this->factory->getMandango()->create($this->class);
         $document->fromArray($data);
 
-        if ( $autosave ) $document->save();
+        if ( $autosave && !$this->config->isEmbedded() ) $document->save();
         return $document;
     }
 

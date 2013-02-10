@@ -1,7 +1,9 @@
 <?php
 namespace Mandango\Factory\Blueprint;
 use Mandango\Factory\Factory;
+use Mandango\Factory\Blueprint;
 use Faker\Generator;
+
 
 final class DefaultGenerator {
     static public function integer(Factory $factory, $name, array $config) 
@@ -67,7 +69,13 @@ final class DefaultGenerator {
     static public function embeddedsOne(Factory $factory, $name, array $config) 
     {
         return function($sequence = null) use ($factory, $name, $config) {
-            print_r($config);
+            $value = $config['value'];
+
+            if ( !$value ) $config['value'] = array();
+            else if ( $value instanceOf $config['class'] ) return $value;
+
+            $bp = new Blueprint($factory, $config['class']);
+            return $bp->create($config['value']);
         };
     }    
 

@@ -11,10 +11,11 @@ class ConfigTest extends TestCase {
 
     public function setUp() {
         parent::setUp();
-        $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
 
-        $this->instance = new Config($factory, 'Model\Article');
+        $this->factory = new Factory($this->mandango, $this->faker);
+        $this->factory->setConfigClasses(self::$staticConfigClasses);
+
+        $this->instance = new Config($this->factory, 'Model\Article');
     }   
 
     public function testHasKeyFields()
@@ -33,6 +34,15 @@ class ConfigTest extends TestCase {
         $this->assertTrue($this->instance->hasField('source'));
     }
 
+    public function testHasIsEmbedded()
+    {
+        $no = new Config($this->factory, 'Model\Article');
+        $this->assertFalse($no->isEmbedded());
+
+        $yes = new Config($this->factory, 'Model\Source');
+        $this->assertTrue($yes->isEmbedded());
+    }
+
     public function testMandatory()
     {
         $this->assertTrue($this->instance->isMandatory('title'));
@@ -40,7 +50,6 @@ class ConfigTest extends TestCase {
 
         $this->instance->setMandatory('line', true);
         $this->assertTrue($this->instance->isMandatory('line'));
-
     }
 
     public function testType()

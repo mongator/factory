@@ -170,4 +170,32 @@ class DefaultGeneratorTest extends TestCase {
 
         foreach($result as $id) $this->assertInstanceOf('MongoId', $id);
     }  
+
+    public function testEmbeddedsOne()
+    {
+        $closure = DefaultGenerator::embeddedsOne($this->factory, 'test', array(
+            'class' => 'Model\Source',
+            'value' => null
+        ));
+
+        $this->assertInstanceOf('Model\Source', $closure());
+
+
+        $closure = DefaultGenerator::embeddedsOne($this->factory, 'test', array(
+            'class' => 'Model\Source',
+            'value' => ['name' => 'faker::name', 'text']
+        ));
+
+        $data = $closure()->toArray();
+        $this->assertTrue(strlen($data['name']) > 0);
+        $this->assertTrue(strlen($data['text']) > 0);
+        $this->assertTrue(strlen($data['note']) == 0);
+
+        $closure = DefaultGenerator::embeddedsOne($this->factory, 'test', array(
+            'class' => 'Model\Source',
+            'value' => $this->factory->getMandango()->create('Model\Source')
+        ));
+
+        $this->assertInstanceOf('Model\Source', $closure());
+    }  
 }

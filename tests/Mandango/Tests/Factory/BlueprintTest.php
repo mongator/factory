@@ -50,6 +50,13 @@ class BlueprintTest extends TestCase {
 
         $this->assertTrue(isset($data['votes']));
         $this->assertTrue($data['votes'] < 200);
+
+        $blueprint = new Blueprint($factory, 'Model\Article');
+
+        $data = $blueprint->build(array('text'));
+        $this->assertTrue(isset($data['text']));
+
+
     }
 
     public function testDefaulsStringValue()

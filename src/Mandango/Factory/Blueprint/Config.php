@@ -7,6 +7,7 @@ class Config {
     private $factory;
     private $class;
     private $configClass;
+    private $isEmbedded = false;
     private $config = array();
 
     public function __construct(Factory $factory, $documentClass) {
@@ -56,7 +57,8 @@ class Config {
         $overrides = $this->fixOverrides($overrides);
 
         $defaults = array();
-        foreach( $this->getMandatory() as $field ) {
+        $fields = array_merge($this->getMandatory(), array_keys($overrides));
+        foreach( $fields  as $field ) {
             $dbName = $this->getDbName($field);
             $value = null;
             if ( isset($overrides[$field]) ) {
@@ -89,6 +91,12 @@ class Config {
     {
         if ( !$this->hasField($field) ) return null;
         return $this->config[$field]['type'];
+    }
+
+    public function isEmbedded() 
+    {
+        if ( !isset($this->configClass['isEmbedded']) ) return false;
+        return $this->configClass['isEmbedded'];
     }
 
     public function getValue($field) 
@@ -160,32 +168,40 @@ class Config {
     private function parseAndCheckReferences() 
     {
         $merge = array();
-        foreach ($this->configClass['referencesOne'] as $name => $reference) {
-            $reference['type'] = 'referencesOne';
-            if (!isset($reference['field'])) $reference['dbName'] = $name.'_reference_field';
-            else $reference['dbName'] = $reference['field'];
-            $this->parseAndCheckAssociationClass($reference, $name);
+        if ( isset($this->configClass['referencesOne']) ) {
+            foreach ($this->configClass['referencesOne'] as $name => &$reference) {
+                $reference['type'] = 'referencesOne';
+                if (!isset($reference['field'])) $reference['dbName'] = $name.'_reference_field';
+                else $reference['dbName'] = $reference['field'];
+                $this->parseAndCheckAssociationClass($reference, $name);
 
+            }
         }
 
-        foreach ($this->configClass['referencesMany'] as $name => $reference) {
-            $reference['type'] = 'referencesMany';
-            if (!isset($reference['field'])) $reference['dbName'] = $name.'_reference_field';
-            else $reference['dbName'] = $reference['field'];
-            $this->parseAndCheckAssociationClass($reference, $name);
+        if ( isset($this->configClass['referencesMany']) ) {
+            foreach ($this->configClass['referencesMany'] as $name => &$reference) {
+                $reference['type'] = 'referencesMany';
+                if (!isset($reference['field'])) $reference['dbName'] = $name.'_reference_field';
+                else $reference['dbName'] = $reference['field'];
+                $this->parseAndCheckAssociationClass($reference, $name);
+            }
         }
     }
 
     private function parseAndCheckEmbeddeds() 
     {
-        foreach ($this->configClass['embeddedsOne'] as $name => &$embedded) {
-            $embedded['type'] = 'embeddedsOne';
-            $this->parseAndCheckAssociationClass($embedded, $name);
+        if ( isset($this->configClass['embeddedsOne']) ) {
+            foreach ($this->configClass['embeddedsOne'] as $name => &$embedded) {
+                $embedded['type'] = 'embeddedsOne';
+                $this->parseAndCheckAssociationClass($embedded, $name);
+            }
         }
 
-        foreach ($this->configClass['embeddedsMany'] as $name => &$embedded) {
-            $embedded['type'] = 'embeddedsMany';
-            $this->parseAndCheckAssociationClass($embedded, $name);
+        if ( isset($this->configClass['embeddedsMany']) ) {
+            foreach ($this->configClass['embeddedsMany'] as $name => &$embedded) {
+                $embedded['type'] = 'embeddedsMany';
+                $this->parseAndCheckAssociationClass($embedded, $name);
+            }
         }
     }
 

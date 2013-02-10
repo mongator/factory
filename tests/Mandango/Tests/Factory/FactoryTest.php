@@ -13,8 +13,10 @@ class FactoryTest extends TestCase {
     public function testConfigs()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
 
+        $this->assertFalse($factory->hasConfigClass('Model\Article'));
+
+        $factory->setConfigClasses(self::$staticConfigClasses);
         $this->assertTrue($factory->hasConfigClass('Model\Article'));
     }
 
