@@ -36,4 +36,28 @@ class FactoryTest extends TestCase {
         $document = $factory->create('Article', array(), false);
         $this->assertInstanceOf('Model\Article', $document);
     }
+
+    public function testRecall()
+    {
+        $factory = new Factory($this->mandango, $this->faker);
+        $factory->setConfigClasses(self::$staticConfigClasses);
+       
+        $factory->define('Article', 'Model\Article');
+        $document = $factory->create('Article');
+
+        $factory->recall();
+    }
+    
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testDefineException()
+    {
+        $factory = new Factory($this->mandango, $this->faker);
+        $factory->setConfigClasses(self::$staticConfigClasses);
+
+        $blueprint = $factory->define('Article', 'Model\Article');
+        $blueprint = $factory->define('Article', 'Model\Article');
+    }
 }

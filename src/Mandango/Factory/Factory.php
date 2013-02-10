@@ -65,6 +65,12 @@ class Factory {
 
     public function define($blueprintName, $documentClass, array $overrides = array()) 
     {
+        if ( $this->hasBlueprint($blueprintName) ) {
+            throw new \InvalidArgumentException(
+                sprintf('The blueprint "%s" already defined.', $blueprintName)
+            );
+        }
+        
         $blueprint = new Blueprint($this, $documentClass, $overrides);
         return $this->blueprints[$blueprintName] = $blueprint;
     }
@@ -80,7 +86,8 @@ class Factory {
         return $this->blueprints[$blueprintName]->create($overrides, $autosave);
     }
 
-    public function defineAndCreate($blueprintName) {
-        
+    public function recall() 
+    {
+        foreach ($this->blueprints as $blueprint) $blueprint->recall();   
     }
 }
