@@ -70,6 +70,21 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $this->assertEquals(4,strlen($closure()));
+
+
+        $closure = DefaultGenerator::string($this->factory, 'test', array(
+            'value' => array('random1', 'random2')
+        ));
+
+        $this->assertTrue(is_string($closure()));
+
+
+        $closure = DefaultGenerator::string($this->factory, 'test', array(
+            'value' => null,
+            'options' => array('random1', 'random2')
+        ));
+
+        $this->assertTrue(is_string($closure()));
     } 
 
     public function testBoolean()
