@@ -32,7 +32,7 @@ final class DefaultGenerator {
                 return $factory->getFaker()->randomElement($config['value']);
             }
 
-            $string = static::generate($factory->getFaker(), $config['value']);
+            $string = DefaultGenerator::generate($factory->getFaker(), $config['value']);
             return sprintf($string, $sequence);
         };
     }       
@@ -52,7 +52,7 @@ final class DefaultGenerator {
             if ( !$value ) $timestamp = time();
             else if ( is_integer($value) || is_float($value) ) $timestamp = $value;
             else {
-                $generated = static::generate($factory->getFaker(), $config['value']);
+                $generated = DefaultGenerator::generate($factory->getFaker(), $config['value']);
                 if ( $generated == $config['value'] ) {
                     $timestamp = strtotime($generated);
                 } else {
@@ -86,14 +86,14 @@ final class DefaultGenerator {
             $documents = array();
 
             if ( !$value ) {
-                $documents[] = static::embedded($factory, $config['class']);
+                $documents[] = DefaultGenerator::embedded($factory, $config['class']);
             } else if ( is_numeric($value) ) {
                 for($i=0;$i<(int)$value;$i++) {
-                    $documents[] = static::embedded($factory, $config['class']);
+                    $documents[] = DefaultGenerator::embedded($factory, $config['class']);
                 }
             } else if ( is_array($value) ) {
                 foreach($value as $default) {
-                    $documents[] = static::embedded($factory, $config['class'], $default);
+                    $documents[] = DefaultGenerator::embedded($factory, $config['class'], $default);
                 }
             } else {
                 throw new \InvalidArgumentException(
@@ -108,7 +108,7 @@ final class DefaultGenerator {
     static public function referencesOne(Factory $factory, $name, array $config) 
     {
         return function($sequence = null) use ($factory, $name, $config) {
-            return static::reference($config['value']);
+            return DefaultGenerator::reference($config['value']);
         };
     }    
 
@@ -119,11 +119,11 @@ final class DefaultGenerator {
             $ids = array();
 
             if ( !$value ) {
-                $ids[] = static::reference();
+                $ids[] = DefaultGenerator::reference();
             } else if ( is_numeric($value) ) {
-                for($i=0;$i<(int)$value;$i++) $ids[] = static::reference();
+                for($i=0;$i<(int)$value;$i++) $ids[] = DefaultGenerator::reference();
             } else if ( is_array($value) ) {
-                foreach($value as $id) $ids[] = static::reference($id);
+                foreach($value as $id) $ids[] = DefaultGenerator::reference($id);
             } else {
                 throw new \InvalidArgumentException(
                     'Unexpected default value for referencesMany field'
