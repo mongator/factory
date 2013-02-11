@@ -75,7 +75,7 @@ final class DefaultGenerator {
     static public function embeddedsOne(Factory $factory, $name, array $config) 
     {
         return function($sequence = null) use ($factory, $name, $config) {
-            return static::embedded($factory, $config['class'], $config['value']);
+            return DefaultGenerator::embedded($factory, $config['class'], $config['value']);
         };
     }    
 
@@ -134,7 +134,8 @@ final class DefaultGenerator {
         };
     }   
 
-    static private function embedded(Factory $factory, $class, $value = null) 
+    /* Private methods */
+    static public function embedded(Factory $factory, $class, $value = null) 
     {
         if ( !$value ) $value = array();
         else if ( $value instanceOf $class ) return $value->toArray()   ;
@@ -143,7 +144,7 @@ final class DefaultGenerator {
         return $bp->build($value);
     }
 
-    static private function reference($value = null) 
+    static public function reference($value = null) 
     {
         if ( !$value ) return new \MongoId();
         else if ( $value instanceOf \MongoId ) return $value;
@@ -152,7 +153,7 @@ final class DefaultGenerator {
         }
     }
 
-    static private function generate(Generator $faker, $string) 
+    static public function generate(Generator $faker, $string) 
     {
         preg_match('/^faker::([a-zA-Z]*)\(?([a-zA-Z0-9 ,#\?\-\:]*)\)?/', $string, $results);
         if ( count($results) == 0 ) return $string;
