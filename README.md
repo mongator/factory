@@ -1,4 +1,4 @@
-# Mandango Factory [![Build Status](https://secure.travis-ci.org/yunait/mandango-factory.png)](http://travis-ci.org/yunait/mandango-factory)#
+# Mandango Factory [![Build Status](https://travis-ci.org/yunait/mandango-factory.png?branch=master)](http://travis-ci.org/yunait/mandango-factory)#
 
 Mandango Factory is a PHP library to avoid the use of fixtures in your PHP unit tests. 
 
