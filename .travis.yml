@@ -4,7 +4,9 @@ php:
   - 5.3
 
 before_script:
-  - composer --dev install
+  - pecl -q install mongo && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar --dev install
 
 services:
   - mongodb
