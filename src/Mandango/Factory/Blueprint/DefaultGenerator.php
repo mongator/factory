@@ -24,8 +24,14 @@ final class DefaultGenerator {
 
     static public function string(Factory $factory, $name, array $config) 
     {
-        if ( $config['value'] === null ) $config['value'] = 'faker::sentence(6)';
+        if ( $config['value'] === null && !isset($config['choice']) ) $config['value'] = 'faker::sentence(6)';
+        else if ( $config['value'] === null && isset($config['choice']) ) $config['value'] = $config['choice'];
+
         return function($sequence = null) use ($factory, $name, $config) {
+            if ( is_array($config['value']) ) {
+                return $factory->getFaker()->randomElement($config['value']);
+            }
+
             $string = static::generate($factory->getFaker(), $config['value']);
             return sprintf($string, $sequence);
         };
