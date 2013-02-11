@@ -155,7 +155,7 @@ class DefaultGeneratorTest extends TestCase {
 
        
         $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
-            'value' => ['49a7011a05c677b9a916612a']
+            'value' => array('49a7011a05c677b9a916612a')
         ));
 
 
@@ -183,7 +183,7 @@ class DefaultGeneratorTest extends TestCase {
 
         $closure = DefaultGenerator::embeddedsOne($this->factory, 'test', array(
             'class' => 'Model\Source',
-            'value' => ['name' => 'faker::name', 'text']
+            'value' => array('name' => 'faker::name', 'text')
         ));
 
         $data = $closure();
