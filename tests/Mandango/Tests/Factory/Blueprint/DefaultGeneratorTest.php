@@ -50,6 +50,23 @@ class DefaultGeneratorTest extends TestCase {
         $this->assertTrue(is_float($closure()));
     }  
 
+    public function testRaw()
+    {
+        $closure = DefaultGenerator::raw($this->factory, 'test', array(
+            'value' => null
+        ));
+
+        $this->assertSame(array(), $closure());
+
+
+        $array =  array('test' => 'value');
+        $closure = DefaultGenerator::raw($this->factory, 'test', array(
+            'value' => $array
+        ));
+
+        $this->assertSame(array('test' => 'value'), $closure());
+    }  
+
     public function testString()
     {
         $closure = DefaultGenerator::string($this->factory, 'test', array(

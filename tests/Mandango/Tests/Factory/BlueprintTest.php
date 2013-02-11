@@ -92,7 +92,7 @@ class BlueprintTest extends TestCase {
 
         $blueprint = new Blueprint($factory, 
             'Model\Article', 
-            array('author', 'categories', 'source', 'comments' => 5)
+            array('author', 'categories', 'source', 'comments' => 4)
         );
 
         $document = $blueprint->create();

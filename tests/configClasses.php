@@ -88,14 +88,25 @@ return array(
         'fields' => array(
             'name' => array(
                 'type' => 'string',
-                'fake' => 'faker::name',
+               // 'fake' => 'faker::name',
                 'validation' => array(
                     array('NotBlank' => NULL),
+                    array('Choice' => 
+                        array('choices' => 
+                            array('active','deleted'),
+                        ),
+                    ),
                 ),
             ),
             'text' => 'string',
             'note' => 'string',
             'line' => 'string',
+            'raw' =>  array(
+                'type' => 'raw',
+                'validation' => array(
+                    array('NotBlank' => NULL)
+                )
+            )
         ),
         'referencesOne' => array(
             'author' => array('class' => 'Model\Author', 'field' => 'authorId'),

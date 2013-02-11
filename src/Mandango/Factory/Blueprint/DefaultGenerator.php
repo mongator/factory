@@ -74,6 +74,14 @@ final class DefaultGenerator {
         };
     }    
 
+    static public function raw(Factory $factory, $name, array $config) 
+    {
+        return function($sequence = null) use ($factory, $name, $config) {
+            if ( $config['value'] !== null ) return $config['value'];
+            return array();
+        };
+    }    
+
     static public function embeddedsOne(Factory $factory, $name, array $config) 
     {
         return function($sequence = null) use ($factory, $name, $config) {
