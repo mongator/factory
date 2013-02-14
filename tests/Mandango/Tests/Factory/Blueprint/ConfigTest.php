@@ -13,8 +13,6 @@ class ConfigTest extends TestCase {
         parent::setUp();
 
         $this->factory = new Factory($this->mandango, $this->faker);
-        $this->factory->setConfigClasses(self::$staticConfigClasses);
-
         $this->instance = new Config($this->factory, 'Model\Article');
     }   
 

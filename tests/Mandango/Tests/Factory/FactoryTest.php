@@ -13,17 +13,12 @@ class FactoryTest extends TestCase {
     public function testConfigs()
     {
         $factory = new Factory($this->mandango, $this->faker);
-
-        $this->assertFalse($factory->hasConfigClass('Model\Article'));
-
-        $factory->setConfigClasses(self::$staticConfigClasses);
-        $this->assertTrue($factory->hasConfigClass('Model\Article'));
+        $this->assertTrue(is_array($factory->getConfigClass('Model\Article')));
     }
 
     public function testBlueprint()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
 
         $this->assertTrue($factory->hasConfigClass('Model\Article'));
         $this->assertFalse($factory->hasBlueprint('Article'));
@@ -40,7 +35,6 @@ class FactoryTest extends TestCase {
     public function testRecall()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
        
         $factory->define('Article', 'Model\Article');
         $document = $factory->create('Article');
@@ -55,7 +49,6 @@ class FactoryTest extends TestCase {
     public function testDefineException()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
 
         $blueprint = $factory->define('Article', 'Model\Article');
         $blueprint = $factory->define('Article', 'Model\Article');

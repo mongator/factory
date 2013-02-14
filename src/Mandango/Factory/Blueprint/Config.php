@@ -12,6 +12,7 @@ class Config {
 
     public function __construct(Factory $factory, $documentClass) {
         $this->configClass = $factory->getConfigClass($documentClass);
+        if ( ! $this->configClass ) var_dump( $this->configClass );
         $this->factory = $factory;
         $this->class = $documentClass;
 
@@ -141,6 +142,8 @@ class Config {
 
     private function parseAndCheckFields() 
     {
+
+    if ( !isset($this->configClass['fields']) ) { var_dump($this->class, $this->configClass); exit(); }
         foreach ($this->configClass['fields'] as $name => &$field) {
             if (is_string($field)) $field = array('type' => $field);
         }

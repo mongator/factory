@@ -28,28 +28,15 @@ class Factory {
         return $this->faker;
     }
 
-    public function setConfigClass($class, array $configClass)
-    {
-        $this->configClasses[$class] = $configClass;
-    }
-
-    public function setConfigClasses(array $configClasses)
-    {
-        $this->configClasses = array();
-        foreach ($configClasses as $class => $configClass) {
-            $this->setConfigClass($class, $configClass);
-        }
-    }
-
     public function hasConfigClass($class)
     {
-        return isset($this->configClasses[$class]);
+        return $this->getMandango()->getMetadataFactory()->hasClass($class);
     }
 
     public function getConfigClass($class)
     {
         if ( !$this->hasConfigClass($class) ) return false;
-        return $this->configClasses[$class];
+        return $this->getMandango()->getMetadataFactory()->getClass($class);
     }
 
     public function hasBlueprint($blueprintName)

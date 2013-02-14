@@ -10,8 +10,6 @@ class BlueprintTest extends TestCase {
     public function testBasic()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
-
         $blueprint = new Blueprint($factory, 'Model\Article');
 
         $this->assertTrue(is_array($blueprint->build()));
@@ -20,8 +18,6 @@ class BlueprintTest extends TestCase {
     public function testDefaulstInConstructor()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
-
         $blueprint = new Blueprint($factory, 'Model\Article', array(
             'votes' => function () { return rand(0, 100); }
         ));
@@ -33,8 +29,6 @@ class BlueprintTest extends TestCase {
     public function testDefaulstInBuild()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
-
         $blueprint = new Blueprint($factory, 'Model\Article', array(
             'votes' => function () { return rand(0, 100); }
         ));
@@ -62,8 +56,6 @@ class BlueprintTest extends TestCase {
     public function testDefaulsStringValue()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
-
         $blueprint = new Blueprint($factory, 'Model\Article', array(
             'points' => 2,
             'text' => 'faker::paragraph(2)',
@@ -88,8 +80,6 @@ class BlueprintTest extends TestCase {
     public function testCreateAndRecall()
     {
         $factory = new Factory($this->mandango, $this->faker);
-        $factory->setConfigClasses(self::$staticConfigClasses);
-
         $blueprint = new Blueprint($factory, 
             'Model\Article', 
             array('author', 'categories', 'source', 'comments' => 4)

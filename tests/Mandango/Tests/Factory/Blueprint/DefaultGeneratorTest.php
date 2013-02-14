@@ -11,7 +11,6 @@ class DefaultGeneratorTest extends TestCase {
         parent::setUp();
 
         $this->factory = new Factory($this->mandango, $this->faker);
-        $this->factory->setConfigClasses(self::$staticConfigClasses);
     }   
 
     public function testInteger()
