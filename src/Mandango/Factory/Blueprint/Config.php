@@ -19,6 +19,10 @@ class Config {
         $this->parseAndCheckFields();
         $this->parseAndCheckReferences();
         $this->parseAndCheckEmbeddeds();
+        if (!$this->isEmbedded()) {
+            $field = ['type' => 'raw'];
+            $this->parseField($field, 'id');
+        }
     }
 
     public function getDocumentClass() 
