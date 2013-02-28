@@ -147,7 +147,10 @@ class Config {
     private function parseAndCheckFields() 
     {
 
-    if ( !isset($this->configClass['fields']) ) { var_dump($this->class, $this->configClass); exit(); }
+        if ( !isset($this->configClass['fields']) ) { 
+                throw new \RuntimeException(sprintf('Unable to find class "%s".', $this->class));
+        }
+        
         foreach ($this->configClass['fields'] as $name => &$field) {
             if (is_string($field)) $field = array('type' => $field);
         }
