@@ -2,6 +2,7 @@
 namespace Mandango\Factory\Blueprint;
 use Mandango\Factory\Factory;
 use Mandango\Factory\Blueprint;
+use Mandango\Document\Document;
 use Faker\Generator;
 
 
@@ -158,6 +159,7 @@ final class DefaultGenerator {
     {
         if ( !$value ) return new \MongoId();
         else if ( $value instanceOf \MongoId ) return $value;
+        else if ( $value instanceOf Document ) return $value->getId();
         else {
             return new \MongoId($value);
         }
