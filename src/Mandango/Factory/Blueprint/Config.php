@@ -20,7 +20,7 @@ class Config {
         $this->parseAndCheckReferences();
         $this->parseAndCheckEmbeddeds();
         if (!$this->isEmbedded()) {
-            $field = ['type' => 'raw'];
+            $field = array('type' => 'raw');
             $this->parseField($field, 'id');
         }
     }
