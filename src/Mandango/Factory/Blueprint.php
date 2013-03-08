@@ -47,11 +47,11 @@ class Blueprint {
         }
     }
 
-    public function build(array $overrides = array())
+    public function build(array $overrides = array(), $useDBNames = true)
     {
         $position = $this->sequence->getNext();
         $data = array();
-        foreach ($this->config->getDefaults($overrides) as $field => $default) {
+        foreach ($this->config->getDefaults($overrides, $useDBNames) as $field => $default) {
             if ( $default ) $data[$field] = $default($position);
         }
 

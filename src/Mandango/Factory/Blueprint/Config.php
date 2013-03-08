@@ -58,13 +58,15 @@ class Config {
         return null;
     }
 
-    public function getDefaults($overrides = array()) {
+    public function getDefaults($overrides = array(), $useDBnames = true) {
         $overrides = $this->fixOverrides($overrides);
 
         $defaults = array();
         $fields = array_merge($this->getMandatory(), array_keys($overrides));
         foreach( $fields  as $field ) {
-            $dbName = $this->getDbName($field);
+            if ( $useDBnames ) $dbName = $this->getDbName($field);
+            else $dbName = $field;
+            
             $value = null;
             if ( isset($overrides[$field]) ) {
                 $value = $overrides[$field];

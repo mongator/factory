@@ -151,8 +151,9 @@ final class DefaultGenerator {
         if ( !$value ) $value = array();
         else if ( $value instanceOf $class ) return $value->toArray()   ;
 
+
         $bp = new Blueprint($factory, $class);
-        return $bp->build($value);
+        return $bp->build($value, false);
     }
 
     static public function reference($value = null) 
