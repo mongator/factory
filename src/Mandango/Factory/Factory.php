@@ -73,6 +73,16 @@ class Factory {
         return $this->blueprints[$blueprintName]->create($overrides, $autosave);
     }
 
+    public function quick($documentClass, array $overrides = array(), $autosave = true) 
+    {
+        $blueprintName = $documentClass;
+        if ( !$this->hasBlueprint($blueprintName) ) {
+            $this->define($blueprintName, $documentClass); 
+        }
+
+        return $this->blueprints[$blueprintName]->create($overrides, $autosave);
+    }
+
     public function recall() 
     {
         foreach ($this->blueprints as $blueprint) $blueprint->recall();   

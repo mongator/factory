@@ -32,6 +32,21 @@ class FactoryTest extends TestCase {
         $this->assertInstanceOf('Model\Article', $document);
     }
 
+
+    public function testQuick()
+    {
+        $factory = new Factory($this->mandango, $this->faker);
+
+        $document = $factory->quick('Model\Article', array(), false);
+        $this->assertInstanceOf('Model\Article', $document);
+
+        $document = $factory->quick('Model\Article', array(), false);
+        $this->assertInstanceOf('Model\Article', $document);
+
+        $this->assertTrue($factory->hasBlueprint('Model\Article'));
+    }
+
+
     public function testRecall()
     {
         $factory = new Factory($this->mandango, $this->faker);

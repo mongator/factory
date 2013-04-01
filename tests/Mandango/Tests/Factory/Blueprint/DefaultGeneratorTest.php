@@ -158,18 +158,21 @@ class DefaultGeneratorTest extends TestCase {
     public function testReferencesOne()
     {
         $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
+            'class' => 'Model\Author',
             'value' => null
         ));
 
         $this->assertInstanceOf('MongoId', $closure());
 
         $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
+            'class' => 'Model\Author',
             'value' => '49a7011a05c677b9a916612a'
         ));
 
         $this->assertEquals('49a7011a05c677b9a916612a', (string)$closure());
 
         $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
+            'class' => 'Model\Author',
             'value' => new \MongoId('49a7011a05c677b9a916612a')
         ));
 
@@ -179,6 +182,7 @@ class DefaultGeneratorTest extends TestCase {
     public function testReferencesMany()
     {
         $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
+            'class' => 'Model\Category',
             'value' => null
         ));
 
@@ -186,6 +190,7 @@ class DefaultGeneratorTest extends TestCase {
 
        
         $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
+            'class' => 'Model\Category',
             'value' => array('49a7011a05c677b9a916612a')
         ));
 
@@ -193,6 +198,7 @@ class DefaultGeneratorTest extends TestCase {
         $this->assertEquals('49a7011a05c677b9a916612a', (string)current($closure()));
        
         $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
+            'class' => 'Model\Category',
             'value' => 3
         ));
 

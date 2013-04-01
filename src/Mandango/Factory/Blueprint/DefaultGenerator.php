@@ -114,12 +114,12 @@ final class DefaultGenerator {
 
             return $documents;
         };
-    }    
+    }
 
     static public function referencesOne(Factory $factory, $name, array $config) 
     {
         return function($sequence = null) use ($factory, $name, $config) {
-            return DefaultGenerator::reference($config['value']);
+            return DefaultGenerator::reference($factory, $config['class'], $config['value']);
         };
     }    
 
@@ -130,11 +130,11 @@ final class DefaultGenerator {
             $ids = array();
 
             if ( !$value ) {
-                $ids[] = DefaultGenerator::reference();
+                $ids[] = DefaultGenerator::reference($factory, $config['class']);
             } else if ( is_numeric($value) ) {
-                for($i=0;$i<(int)$value;$i++) $ids[] = DefaultGenerator::reference();
+                for($i=0;$i<(int)$value;$i++) $ids[] = DefaultGenerator::reference($factory, $config['class']);
             } else if ( is_array($value) ) {
-                foreach($value as $id) $ids[] = DefaultGenerator::reference($id);
+                foreach($value as $id) $ids[] = DefaultGenerator::reference($factory, $config['class'], $id);
             } else {
                 throw new \InvalidArgumentException(
                     'Unexpected default value for referencesMany field'
@@ -156,9 +156,9 @@ final class DefaultGenerator {
         return $bp->build($value, false);
     }
 
-    static public function reference($value = null) 
+    static public function reference(Factory $factory, $class, $value = null) 
     {
-        if ( !$value ) return new \MongoId();
+        if ( !$value ) return $factory->quick($class)->getId();
         else if ( $value instanceOf \MongoId ) return $value;
         else if ( $value instanceOf Document ) return $value->getId();
         else {
