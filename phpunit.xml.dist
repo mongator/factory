@@ -2,14 +2,14 @@
 
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Mandango/Factory Test Suite">
-            <directory>tests/Mandango/</directory>
+        <testsuite name="Mongator/Factory Test Suite">
+            <directory>tests/Mongator/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">src/Mandango/</directory>
+            <directory suffix=".php">src/Mongator/</directory>
         </whitelist>
     </filter>
 </phpunit>

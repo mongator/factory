@@ -1,8 +1,8 @@
 <?php
-namespace Mandango\Factory;
-use Mandango\Factory\Blueprint\Config;
-use Mandango\Factory\Blueprint\Sequence;
-use Mandango\Factory\Blueprint\DefaultGenerator;
+namespace Mongator\Factory;
+use Mongator\Factory\Blueprint\Config;
+use Mongator\Factory\Blueprint\Sequence;
+use Mongator\Factory\Blueprint\DefaultGenerator;
 
 class Blueprint {
     protected $factory;
@@ -62,7 +62,7 @@ class Blueprint {
     {
         $data = $this->build($overrides);
         
-        $this->documents[] = $document = $this->factory->getMandango()->create($this->class);
+        $this->documents[] = $document = $this->factory->getMongator()->create($this->class);
         $document->fromArray($data);
 
         if ( $autosave && !$this->config->isEmbedded() ) $document->save();
@@ -71,7 +71,7 @@ class Blueprint {
 
     public function recall() 
     {
-        return $this->factory->getMandango()
+        return $this->factory->getMongator()
             ->getRepository($this->class)
             ->delete($this->documents);
     }

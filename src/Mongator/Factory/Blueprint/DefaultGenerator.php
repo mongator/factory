@@ -1,8 +1,8 @@
 <?php
-namespace Mandango\Factory\Blueprint;
-use Mandango\Factory\Factory;
-use Mandango\Factory\Blueprint;
-use Mandango\Document\Document;
+namespace Mongator\Factory\Blueprint;
+use Mongator\Factory\Factory;
+use Mongator\Factory\Blueprint;
+use Mongator\Document\Document;
 use Faker\Generator;
 
 

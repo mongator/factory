@@ -1,5 +1,5 @@
 <?php
-namespace Mandango\Factory\Blueprint;
+namespace Mongator\Factory\Blueprint;
 
 class Sequence {
     protected $value;

@@ -1,15 +1,15 @@
 <?php
-namespace Mandango\Factory\Tests;
-use Mandango\Tests\TestCase;
-use Mandango\Factory\Factory;
-use Mandango\Factory\Blueprint;
+namespace Mongator\Factory\Tests;
+use Mongator\Tests\TestCase;
+use Mongator\Factory\Factory;
+use Mongator\Factory\Blueprint;
 
 class BlueprintTest extends TestCase {
     protected $configClass;
 
     public function testBasic()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
         $blueprint = new Blueprint($factory, 'Model\Article');
 
         $this->assertTrue(is_array($blueprint->build()));
@@ -17,7 +17,7 @@ class BlueprintTest extends TestCase {
 
     public function testDefaulstInConstructor()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
         $blueprint = new Blueprint($factory, 'Model\Article', array(
             'votes' => function () { return rand(0, 100); }
         ));
@@ -28,7 +28,7 @@ class BlueprintTest extends TestCase {
 
     public function testDefaulstInBuild()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
         $blueprint = new Blueprint($factory, 'Model\Article', array(
             'votes' => function () { return rand(0, 100); }
         ));
@@ -55,7 +55,7 @@ class BlueprintTest extends TestCase {
 
     public function testDefaulsStringValue()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
         $blueprint = new Blueprint($factory, 'Model\Article', array(
             'points' => 2,
             'text' => 'faker::paragraph(2)',
@@ -79,7 +79,7 @@ class BlueprintTest extends TestCase {
 
     public function testCreateAndRecall()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
         $blueprint = new Blueprint($factory, 
             'Model\Article', 
             array('author', 'categories', 'source', 'comments' => 4)
@@ -91,7 +91,7 @@ class BlueprintTest extends TestCase {
 
         $blueprint->recall();
 
-        $result = $this->mandango
+        $result = $this->mongator
             ->getRepository('Model\Article')
             ->createQuery()
             ->criteria(array('_id' => $document->getId()))

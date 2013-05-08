@@ -1,26 +1,26 @@
 <?php
-namespace Mandango\Factory;
-use Mandango\Mandango;
+namespace Mongator\Factory;
+use Mongator\Mongator;
 use Faker\Generator;
 
 class Factory {
-    private $mandango;
+    private $mongator;
     private $faker;
     private $configClasses;
     private $blueprints;
 
-    public function __construct(Mandango $mandango, Generator $faker)
+    public function __construct(Mongator $mongator, Generator $faker)
     {
-        $this->mandango = $mandango;
+        $this->mongator = $mongator;
         $this->faker = $faker;
 
         $this->blueprints = array();
         $this->configClasses = array();
     }
 
-    public function getMandango()
+    public function getMongator()
     {
-        return $this->mandango;
+        return $this->mongator;
     }
 
     public function getFaker()
@@ -30,13 +30,13 @@ class Factory {
 
     public function hasConfigClass($class)
     {
-        return $this->getMandango()->getMetadataFactory()->hasClass($class);
+        return $this->getMongator()->getMetadataFactory()->hasClass($class);
     }
 
     public function getConfigClass($class)
     {
         if ( !$this->hasConfigClass($class) ) return false;
-        return $this->getMandango()->getMetadataFactory()->getClass($class);
+        return $this->getMongator()->getMetadataFactory()->getClass($class);
     }
 
     public function hasBlueprint($blueprintName)

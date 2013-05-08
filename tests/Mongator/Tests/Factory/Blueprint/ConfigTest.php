@@ -1,9 +1,9 @@
 <?php
-namespace Mandango\Factory\Tests\Blueprint;
-use Mandango\Tests\TestCase;
-use Mandango\Factory\Factory;
-use Mandango\Factory\Blueprint\Config;
-use Mandango\Factory\Blueprint\Sequence;
+namespace Mongator\Factory\Tests\Blueprint;
+use Mongator\Tests\TestCase;
+use Mongator\Factory\Factory;
+use Mongator\Factory\Blueprint\Config;
+use Mongator\Factory\Blueprint\Sequence;
 
 class ConfigTest extends TestCase {
     protected $configClass;
@@ -12,7 +12,7 @@ class ConfigTest extends TestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->factory = new Factory($this->mandango, $this->faker);
+        $this->factory = new Factory($this->mongator, $this->faker);
         $this->instance = new Config($this->factory, 'Model\Article');
     }   
 

@@ -1,30 +1,30 @@
 <?php
-namespace Mandango\Factory\Tests;
-use Mandango\Tests\TestCase;
-use Mandango\Factory\Factory;
+namespace Mongator\Factory\Tests;
+use Mongator\Tests\TestCase;
+use Mongator\Factory\Factory;
 
 class FactoryTest extends TestCase {
     public function testConstructor() 
     {
-        $factory = new Factory($this->mandango, $this->faker);
-        $this->assertInstanceOf('Mandango\Mandango', $factory->getMandango());
+        $factory = new Factory($this->mongator, $this->faker);
+        $this->assertInstanceOf('Mongator\Mongator', $factory->getMongator());
     }
 
     public function testConfigs()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
         $this->assertTrue(is_array($factory->getConfigClass('Model\Article')));
     }
 
     public function testBlueprint()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
 
         $this->assertTrue($factory->hasConfigClass('Model\Article'));
         $this->assertFalse($factory->hasBlueprint('Article'));
 
         $blueprint = $factory->define('Article', 'Model\Article');
-        $this->assertInstanceOf('Mandango\Factory\Blueprint', $blueprint);
+        $this->assertInstanceOf('Mongator\Factory\Blueprint', $blueprint);
 
         $this->assertTrue($factory->hasBlueprint('Article'));
 
@@ -35,7 +35,7 @@ class FactoryTest extends TestCase {
 
     public function testQuick()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
 
         $document = $factory->quick('Model\Article', array(), false);
         $this->assertInstanceOf('Model\Article', $document);
@@ -49,7 +49,7 @@ class FactoryTest extends TestCase {
 
     public function testRecall()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
        
         $factory->define('Article', 'Model\Article');
         $document = $factory->create('Article');
@@ -63,7 +63,7 @@ class FactoryTest extends TestCase {
      */
     public function testDefineException()
     {
-        $factory = new Factory($this->mandango, $this->faker);
+        $factory = new Factory($this->mongator, $this->faker);
 
         $blueprint = $factory->define('Article', 'Model\Article');
         $blueprint = $factory->define('Article', 'Model\Article');

@@ -1,8 +1,8 @@
 <?php
-namespace Mandango\Factory\Tests\Blueprint;
-use Mandango\Tests\TestCase;
-use Mandango\Factory\Factory;
-use Mandango\Factory\Blueprint\DefaultGenerator;
+namespace Mongator\Factory\Tests\Blueprint;
+use Mongator\Tests\TestCase;
+use Mongator\Factory\Factory;
+use Mongator\Factory\Blueprint\DefaultGenerator;
 
 class DefaultGeneratorTest extends TestCase {
     private $factory;
@@ -10,7 +10,7 @@ class DefaultGeneratorTest extends TestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->factory = new Factory($this->mandango, $this->faker);
+        $this->factory = new Factory($this->mongator, $this->faker);
     }   
 
     public function testInteger()
@@ -230,7 +230,7 @@ class DefaultGeneratorTest extends TestCase {
 
         $closure = DefaultGenerator::embeddedsOne($this->factory, 'test', array(
             'class' => 'Model\Source',
-            'value' => $this->factory->getMandango()->create('Model\Source')
+            'value' => $this->factory->getMongator()->create('Model\Source')
         ));
 
         $this->assertTrue(is_array($closure()));

@@ -1,9 +1,9 @@
 <?php
-namespace Mandango\Factory\Blueprint;
-use Mandango\Factory\Factory;
+namespace Mongator\Factory\Blueprint;
+use Mongator\Factory\Factory;
 
 class Config {
-    const GENERATOR = 'Mandango\Factory\Blueprint\DefaultGenerator';
+    const GENERATOR = 'Mongator\Factory\Blueprint\DefaultGenerator';
     private $factory;
     private $class;
     private $configClass;

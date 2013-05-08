@@ -6,13 +6,13 @@
     "require": {
         "php": ">=5.3.0",
         "ext-mongo": "*",
-        "yunait/mandango": "dev-master",
-        "yunait/mondator": "dev-master",
+        "mongator/mongator": "dev-master",
+        "mongator/mondator": "dev-master",
         "fzaninotto/faker": "1.1.*@dev"
     },
     "autoload": {
         "psr-0": {
-            "Mandango\\Factory\\": "src/"
+            "Mongator\\Factory\\": "src/"
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
-namespace Mandango\Factory\Tests\Blueprint;
-use Mandango\Tests\TestCase;
-use Mandango\Factory\Blueprint\Sequence;
+namespace Mongator\Factory\Tests\Blueprint;
+use Mongator\Tests\TestCase;
+use Mongator\Factory\Blueprint\Sequence;
 
 class SequenceTest extends TestCase {
     protected $configClass;
