@@ -1,4 +1,5 @@
-# Mongator Factory [![Build Status](https://travis-ci.org/yunait/mongator-factory.png?branch=master)](http://travis-ci.org/yunait/mongator-factory)#
+Mongator Factory [![Build Status](https://travis-ci.org/mongator/factory.png?branch=master)](https://travis-ci.org/mongator/factory)
+==============================
 
 Mongator Factory is a PHP library to avoid the use of fixtures in your PHP unit tests. 
 
@@ -8,4 +9,67 @@ Mongator Factory will read the Mondator configClass definitions and make a defau
 
 Mongator Factory is heavily inspired by [Phactory](http://phactory.org/).
 
-Mongator Factory requires PHP >= 5.3.3.
+Requirements
+------------
+
+* PHP 5.3.x;
+* mongator/mongator
+
+
+Installation
+------------
+
+The recommended way to install Mongator Factory is [through composer](http://getcomposer.org).
+You can see [package information on Packagist.](https://packagist.org/packages/mongator/factory)
+
+```JSON
+{
+    "require": {
+        "mongator/factory": "dev"
+    }
+}
+```
+
+
+Examples
+--------
+On your test cases just define a new fixture and after you can create all documents as you need
+
+```php
+$factory->define('MyFixture', 'Model\Article');
+$document = $factory->create('Article');
+```
+
+Or maybe with some default values
+
+```php
+$factory->define('MyFixture', 'Model\Article', array(
+    'points' => 2,
+    'text' => 'faker::paragraph(2)',
+    'line' => 'faker::name',
+    'title' => 'text example %s',
+    'updatedAt' => '1st May 2010, 01:30:00',
+    'votes' => function () { return rand(200, 300); }
+));
+$document = $factory->create('Article');
+```
+
+Or the quick way
+```php
+$document = $factory->quick('Model\Article');
+```
+
+Tests
+-----
+
+Tests are in the `tests` folder.
+To run them, you need PHPUnit.
+Example:
+
+    $ phpunit --configuration phpunit.xml.dist
+
+
+License
+-------
+
+MIT, see [LICENSE](LICENSE)
