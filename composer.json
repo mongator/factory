@@ -1,6 +1,6 @@
 {
-    "name": "yunait/mandango-factory",
-    "homepage": "http://github.com/yunait/mandango-factory",
+    "name": "mongator/factory",
+    "homepage": "http://github.com/mongator/factory",
     "type": "library",
     "minimum-stability": "dev",
     "require": {
