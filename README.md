@@ -7,7 +7,7 @@ By using a database factory instead of fixtures, your unit tests will be more cl
 
 Mongator Factory will read the Mondator configClass definitions and make a default for every field, if you are using symfony/validator you will ge too the mandatory fields of your classes.
 
-Mongator Factory is heavily inspired by [Phactory](http://phactory.org/).
+Mongator Factory is heavily inspired by [phactory](http://phactory.org/).
 
 
 Requirements
@@ -45,11 +45,10 @@ Instance of a MandangoFactory in your setUp method at TestCase and a recall in y
 ```php
 class TestCase extends \PHPUnit_Framework_TestCase {
     protected $factory;
-    protected $faker;
 
     protected function setUp() {
-        $faker = FakerFactory::create();
-        $this->factory = new MandangoFactory($mongator, $faker);
+        $faker = Faker\Factory::create();
+        $this->factory = new Mongator\Factory\Factory($mongator, $faker);
     }
 
     protected function tearDown() {
