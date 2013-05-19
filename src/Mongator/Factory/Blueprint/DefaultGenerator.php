@@ -171,6 +171,7 @@ final class DefaultGenerator {
         if ( !$value ) return $factory->quick($class)->getId();
         else if ( $value instanceOf \MongoId ) return $value;
         else if ( $value instanceOf Document ) return $value->getId();
+        else if ( is_array($value) ) return $factory->quick($class, $value)->getId();
         else {
             return new \MongoId($value);
         }

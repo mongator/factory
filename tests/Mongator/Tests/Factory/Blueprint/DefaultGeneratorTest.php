@@ -187,6 +187,16 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $this->assertEquals('49a7011a05c677b9a916612a', (string)$closure());
+
+        $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
+            'class' => 'Model\Category',
+            'value' => array( 'name' => 'my special test name'),
+        ));
+
+        $repository = $this->factory->getMongator()->getRepository('Model\Category');
+        $category = $repository->findOneById($closure());
+
+        $this->assertEquals('my special test name', $category->getName());
     }  
 
     public function testReferencesMany()
