@@ -25,6 +25,13 @@ class DefaultGeneratorTest extends TestCase {
 
     public function testInteger()
     {
+
+        $closure = DefaultGenerator::integer($this->factory, 'test', array(
+            'value' => '%d'
+        ));
+
+        $this->assertTrue($closure() > 0);
+
         $closure = DefaultGenerator::integer($this->factory, 'test', array(
             'value' => null
         ));
@@ -78,6 +85,13 @@ class DefaultGeneratorTest extends TestCase {
 
     public function testString()
     {
+        $closure = DefaultGenerator::string($this->factory, 'test', array(
+            'value' => null
+        ));
+
+        $this->assertTrue(is_string($closure()));
+
+
         $closure = DefaultGenerator::string($this->factory, 'test', array(
             'value' => 'Fixed text'
         ));
