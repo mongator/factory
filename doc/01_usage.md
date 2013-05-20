@@ -31,7 +31,7 @@ Defining Blueprints
 
 A blueprint contains default values for your documents. You must define one for each Model you want to test. These defaults will be set on each object you create in this table, unless you override them at creation time.
 
-Each document field type has different helpers: You can check the [Default Generator] for reference.
+Each document field type has different helpers. You can check the [Default Generator] for reference.
 
 Assuming you have a model called `article` in Mongator with `title` as mandatory string field, `author` as string field and `status` as another string field, the following would define a blueprint for that model:
 
