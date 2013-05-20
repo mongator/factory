@@ -1,17 +1,17 @@
 Usage
 =====
 
-You can use Mongator Factory with PHPUnit, SimpleTest, or any other PHP unit test framework.
+You can use Mongator Factory with PHPUnit, SimpleTest or any other PHP unit test framework.
 
-After giving Mongator Factory a mongator instance and a faker instance (faker will generate random string and numbers) you’ll define a blueprint for each model you want to create documents in. The blueprint provides default values for some or all of the columns in that collection. You can then create one or more document in that collection, and optionally override the default values for each one.
+After giving Mongator Factory a mongator and a faker instance (the faker will generate random strings and numbers) you’ll need to define a blueprint for each model you want to create documents in. The blueprint provides default values for some or all of the columns in that collection. You can then create one or more documents in that collection and optionally override the default values for each one.
 
 
 Factory Object
 --------------
 
-To use Factory you have to create a factory object.
+To use the Factory you have to create a factory object.
 
-To create the facotry object you have to pass it the mongator object fully configurated with connections, metadata, etc and a faker object, faker is a third party class used to generate random string and numbers
+To create it, you have to pass the fully configurated mongator object (with connections, metadata, etc.) and a faker object. The faker is a third party class used to generate random strings and numbers.
 
 ```php
 
@@ -29,11 +29,11 @@ $factory = new Mongator\Factory\Factory($mongator, $faker);
 Defining Blueprints
 -------------------
 
-A blueprint contains the default values to be used for create the documents. You must define it for each Model you want to test. These defaults will be set on each object you create in this table, unless you override them at creation time.
+A blueprint contains default values for your documents. You must define one for each Model you want to test. These defaults will be set on each object you create in this table, unless you override them at creation time.
 
-Each document field type have diferent helpers, check [Default Generator] for reference.
+Each document field type has different helpers: You can check the [Default Generator] for reference.
 
-Assuming you have a model called `article` in Mongator with `title` as mandatory string field, `author` as string field and `status` another string field, the following will define a blueprint for that model:
+Assuming you have a model called `article` in Mongator with `title` as mandatory string field, `author` as string field and `status` as another string field, the following would define a blueprint for that model:
 
 ```php
 $factory->define('DefaultArticle', 'Model\Article', array(
@@ -47,9 +47,9 @@ The creating Documents
 
 Once you have defined a blueprint, you’re ready to create documents with Factory. 
 
-You can add overrides for the defined blueprints, if you need diferent values.  
+You can add overrides for the defined blueprints, if you need different values.  
 
-Based on our previous defined blueprint `DefaultAritcle`, here’s some examples of how you might create some article documents:
+Based on our previous defined blueprint `DefaultAritcle`, here are some examples of how you could create some article documents:
 
 ### Example #1: Without overrides
 
@@ -103,6 +103,6 @@ Array
 Recall
 ------
 
-Usually when you are unit testing, you’ll want your database to be reset after each test. Calling `recall` Factory method you will delete all the document create with Factory keeping you database clean and tidy.
+Usually, during unit testing, you’ll want your database to be reset after each test. Calling the `recall` Factory method you'll delete all the document created with Factory, thus keeping your database clean and tidy.
 
 
