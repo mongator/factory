@@ -52,7 +52,7 @@ class TestCase extends \PHPUnit_Framework_TestCase {
     }
 
     protected function tearDown() {
-        if ($this->factory) $this->factory->recall();
+        $this->factory->recall();
     }
 }
 ```
