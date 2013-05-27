@@ -20,7 +20,7 @@ Array(
 #### fixed value
 You can configure a fixed value with which the field will be set.
 
-#### clsure
+#### closure
 You can set a clusure, which must return a value suitable for this field.
 
 ```
