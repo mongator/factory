@@ -21,7 +21,7 @@ Array(
 You can configure a fixed value with which the field will be set.
 
 #### closure
-You can set a clusure, which must return a value suitable for this field.
+You can set a closure, which must return a suitable value for this field.
 
 ```
 Array(
@@ -32,17 +32,17 @@ Array(
 Integer
 -------
 
-#### numerify 
+#### numerify
 For generating random integers of specific length, set as many '#' characters as you want your integer length to be.
 
 
 #### sequence
-If you set the value to `%d`, it will return an integer for each generated instance. Each value will be increased by one in regard to the previously generated instance.
+If you set the value to `%d`, it will return an automatically incremented integer for each generated instance.
 
 Float
 -----
 
-#### numerify 
+#### numerify
 Same as for integers, except for the inclusion of '.' or ',' characters for separationg decimals from units.
 
 
@@ -50,10 +50,10 @@ String
 ------
 
 #### sequence
-If you set the value to a string with `%d`, it will be pass the string to a sprinf function and %d will be replaced with a sequence based on the uses of this blueprint.
+If you set the value to a string with `%d`, it will be passed to a sprintf function and %d will be replaced with an automatically incremented sequence based on the uses of this blueprint.
 
 #### faker
-You can use any faker function returning a string,  setting the value to 'faker::' followed the function name and argument.
+You can use any Faker function returning a string by setting the value to 'faker::' followed the function name and argument.
 Eg.: `faker::lexify(????)` -> return a string of 4 random chars.
 
 > You can check the available faker function at [https://github.com/fzaninotto/Faker](https://github.com/fzaninotto/Faker)
@@ -69,6 +69,6 @@ Parse any English textual datetime description, just like [strtotime](http://www
 Eg.: `21-10-2012`: int(1350770400)
 
 #### faker
-You can use any faker function returning a valide date, setting the value to 'faker::' followed the function name and argument.
+You can use any Faker function returning a valid date by setting the value to 'faker::' followed the function name and argument.
 Eg.: `faker::dateTimeBetween(-20 years, -10 years)` -> return a date between the given dates
 

@@ -5,7 +5,7 @@ Embedded One
 -------------
 
 #### null
-Create a default or empty embedded document. 
+Create a default or empty embedded document.
 
 #### document
 You can assign an object directly
@@ -17,14 +17,14 @@ Or you can set an array with the config, just like a normal document.
 Embeddeds Many
 --------------
 
-#### null 
+#### null
 Create one embedded document
 
 #### integer
-If an integer is given the equal number of default documents will be created.
+If an integer is given, that number of default documents will be created.
 
 #### multidimensional array
-An equal number of documents will be create with each inner array configuration
+An equal number of documents will be created with each inner array configuration
 
 ```php
 array(
@@ -51,11 +51,11 @@ A random MongoId will be assigned to the reference field
 #### string
 A string to use as the id. Must be 24 hexidecimal characters
 
-#### mongoId
+#### MongoId
 The mongoId is assigned
 
 #### array
-If the provided value is an array, a new document created with this configuration will be assigned.
+If the provided value is an array, a new document with this configuration will be created and assigned.
 
 ```php
 array(
@@ -71,10 +71,10 @@ Reference Many
 Create one document
 
 #### integer
-If an integer is given, the equal number of default documents will be created.
+If an integer is given, the equal number of default documents will be created and assigned.
 
 #### array of strings
-An equal number of mongoIds will be assigned to the reference field, string must be 24 hexidecimal characters
+An equal number of MongoIds will be assigned to the reference field; strings must be 24 hexidecimal characters
 
 ```php
 array(
