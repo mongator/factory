@@ -12,9 +12,9 @@
 namespace Mongator\Factory;
 use Mongator\Factory\Blueprint\Config;
 use Mongator\Factory\Blueprint\Sequence;
-use Mongator\Factory\Blueprint\DefaultGenerator;
 
-class Blueprint {
+class Blueprint
+{
     protected $factory;
     protected $config;
     protected $class;
@@ -23,7 +23,7 @@ class Blueprint {
     protected $sequence;
     protected $documents = array();
 
-    public function __construct(Factory $factory, $documentClass, array $overrides = array()) 
+    public function __construct(Factory $factory, $documentClass, array $overrides = array())
     {
         $this->class = $documentClass;
         $this->config = new Config($factory, $documentClass);
@@ -33,17 +33,17 @@ class Blueprint {
         $this->applyOverrides($overrides);
     }
 
-    public function getDocumentClass() 
+    public function getDocumentClass()
     {
         return $this->documentClass;
     }
 
-    public function addDefault($field, $value) 
+    public function addDefault($field, $value)
     {
         $this->defaults[$field] = $value;
     }
 
-    public function removeDefault($field) 
+    public function removeDefault($field)
     {
         unset($this->defaults[$field]);
     }
@@ -51,7 +51,7 @@ class Blueprint {
     public function applyOverrides(array $overrides)
     {
         $overrides = $this->config->fixOverrides($overrides);
-        foreach ($overrides as $field => &$value ) {
+        foreach ($overrides as $field => &$value) {
             $this->config->setValue($field, $value);
             $this->config->setMandatory($field, true);
         }
@@ -68,10 +68,10 @@ class Blueprint {
         return $data;
     }
 
-    public function create(array $overrides = array(), $autosave = true) 
+    public function create(array $overrides = array(), $autosave = true)
     {
         $data = $this->build($overrides);
-        
+
         $this->documents[] = $document = $this->factory->getMongator()->create($this->class);
         $document->fromArray($data);
 
@@ -79,7 +79,7 @@ class Blueprint {
         return $document;
     }
 
-    public function recall() 
+    public function recall()
     {
         return $this->factory->getMongator()
             ->getRepository($this->class)

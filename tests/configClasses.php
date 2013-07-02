@@ -15,8 +15,8 @@ return array(
                 'type' => 'string',
                 'validation' => array(
                     array('NotBlank' => NULL),
-                    array('Choice' => 
-                        array('choices' => 
+                    array('Choice' =>
+                        array('choices' =>
                             array('active','deleted'),
                         ),
                     ),
@@ -91,8 +91,8 @@ return array(
                // 'fake' => 'faker::name',
                 'validation' => array(
                     array('NotBlank' => NULL),
-                    array('Choice' => 
-                        array('choices' => 
+                    array('Choice' =>
+                        array('choices' =>
                             array('active','deleted'),
                         ),
                     ),

@@ -11,10 +11,11 @@
 
 namespace Mongator\Factory\Blueprint;
 
-class Sequence {
+class Sequence
+{
     protected $value;
 
-    public function __construct($start = 0) 
+    public function __construct($start = 0)
     {
         $this->setValue($start);
     }

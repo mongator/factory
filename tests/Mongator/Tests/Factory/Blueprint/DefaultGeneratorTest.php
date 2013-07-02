@@ -14,14 +14,16 @@ use Mongator\Tests\TestCase;
 use Mongator\Factory\Factory;
 use Mongator\Factory\Blueprint\DefaultGenerator;
 
-class DefaultGeneratorTest extends TestCase {
+class DefaultGeneratorTest extends TestCase
+{
     private $factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->factory = new Factory($this->mongator, $this->faker);
-    }   
+    }
 
     public function testInteger()
     {
@@ -49,7 +51,7 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $this->assertTrue(is_integer($closure()));
-    }  
+    }
 
     public function testFloat()
     {
@@ -64,7 +66,7 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $this->assertTrue(is_float($closure()));
-    }  
+    }
 
     public function testRaw()
     {
@@ -74,14 +76,13 @@ class DefaultGeneratorTest extends TestCase {
 
         $this->assertSame(array(), $closure());
 
-
         $array =  array('test' => 'value');
         $closure = DefaultGenerator::raw($this->factory, 'test', array(
             'value' => $array
         ));
 
         $this->assertSame(array('test' => 'value'), $closure());
-    }  
+    }
 
     public function testString()
     {
@@ -90,7 +91,6 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $this->assertTrue(is_string($closure()));
-
 
         $closure = DefaultGenerator::string($this->factory, 'test', array(
             'value' => 'Fixed text'
@@ -104,13 +104,11 @@ class DefaultGeneratorTest extends TestCase {
 
         $this->assertEquals('Sequenced text 1', $closure(1));
 
-
         $closure = DefaultGenerator::string($this->factory, 'test', array(
             'value' => 'faker::lexify(????)'
         ));
 
         $this->assertEquals(4,strlen($closure()));
-
 
         $closure = DefaultGenerator::string($this->factory, 'test', array(
             'value' => array('random1', 'random2')
@@ -118,14 +116,13 @@ class DefaultGeneratorTest extends TestCase {
 
         $this->assertTrue(is_string($closure()));
 
-
         $closure = DefaultGenerator::string($this->factory, 'test', array(
             'value' => null,
             'options' => array('random1', 'random2')
         ));
 
         $this->assertTrue(is_string($closure()));
-    } 
+    }
 
     public function testBoolean()
     {
@@ -140,7 +137,7 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $this->assertTrue(is_bool($closure()));
-    }  
+    }
 
     public function testDate()
     {
@@ -167,17 +164,17 @@ class DefaultGeneratorTest extends TestCase {
 
         $result = $closure();
         $this->assertEquals(strtotime($time), $result->getTimestamp());
-       
+
         $closure = DefaultGenerator::date($this->factory, 'test', array(
             'value' => 'faker::dateTimeBetween(-20 years, -10 years)'
         ));
 
         $result = $closure();
-        $this->assertTrue(( 
-            $result->getTimestamp() >= strtotime('-20 years') && 
+        $this->assertTrue((
+            $result->getTimestamp() >= strtotime('-20 years') &&
             $result->getTimestamp() <= strtotime('-10 years')
-        ));        
-    }  
+        ));
+    }
 
     public function testReferencesOne()
     {
@@ -193,14 +190,14 @@ class DefaultGeneratorTest extends TestCase {
             'value' => '49a7011a05c677b9a916612a'
         ));
 
-        $this->assertEquals('49a7011a05c677b9a916612a', (string)$closure());
+        $this->assertEquals('49a7011a05c677b9a916612a', (string) $closure());
 
         $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
             'class' => 'Model\Author',
             'value' => new \MongoId('49a7011a05c677b9a916612a')
         ));
 
-        $this->assertEquals('49a7011a05c677b9a916612a', (string)$closure());
+        $this->assertEquals('49a7011a05c677b9a916612a', (string) $closure());
 
         $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
             'class' => 'Model\Category',
@@ -211,7 +208,7 @@ class DefaultGeneratorTest extends TestCase {
         $category = $repository->findOneById($closure());
 
         $this->assertEquals('my special test name', $category->getName());
-    }  
+    }
 
     public function testReferencesMany()
     {
@@ -222,25 +219,23 @@ class DefaultGeneratorTest extends TestCase {
 
         $this->assertInstanceOf('MongoId', current($closure()));
 
-       
         $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
             'class' => 'Model\Category',
             'value' => array('49a7011a05c677b9a916612a')
         ));
 
+        $this->assertEquals('49a7011a05c677b9a916612a', (string) current($closure()));
 
-        $this->assertEquals('49a7011a05c677b9a916612a', (string)current($closure()));
-       
         $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
             'class' => 'Model\Category',
             'value' => 3
         ));
 
-        $result = $closure(); 
+        $result = $closure();
         $this->assertEquals(3, count($result));
 
         foreach($result as $id) $this->assertInstanceOf('MongoId', $id);
-    }  
+    }
 
     public function testEmbeddedsOne()
     {
@@ -250,7 +245,6 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $this->assertTrue(is_array($closure()));
-
 
         $closure = DefaultGenerator::embeddedsOne($this->factory, 'test', array(
             'class' => 'Model\Source',
@@ -268,7 +262,7 @@ class DefaultGeneratorTest extends TestCase {
         ));
 
         $this->assertTrue(is_array($closure()));
-    }  
+    }
 
     public function testEmbeddedsMany()
     {
@@ -287,7 +281,7 @@ class DefaultGeneratorTest extends TestCase {
             )
         ));
 
-        $result = $closure(); 
+        $result = $closure();
         $this->assertEquals(2, count($result));
         $this->assertTrue(strlen($result[0]['text']) > 0);
         $this->assertTrue(strlen($result[1]['name']) > 0);
@@ -297,8 +291,8 @@ class DefaultGeneratorTest extends TestCase {
             'value' => 3
         ));
 
-        $result = $closure(); 
+        $result = $closure();
         $this->assertEquals(3, count($result));
         foreach($result as $id) $this->assertTrue(is_array($id));
-    }  
+    }
 }

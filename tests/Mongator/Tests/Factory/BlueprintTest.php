@@ -14,7 +14,8 @@ use Mongator\Tests\TestCase;
 use Mongator\Factory\Factory;
 use Mongator\Factory\Blueprint;
 
-class BlueprintTest extends TestCase {
+class BlueprintTest extends TestCase
+{
     protected $configClass;
 
     public function testBasic()
@@ -60,7 +61,6 @@ class BlueprintTest extends TestCase {
         $data = $blueprint->build(array('text'));
         $this->assertTrue(isset($data['text']));
 
-
     }
 
     public function testDefaulsStringValue()
@@ -78,11 +78,11 @@ class BlueprintTest extends TestCase {
             'source'
         ));
 
-        $data = $blueprint->build(); 
+        $data = $blueprint->build();
         $this->assertEquals(2, $data['points']);
         $this->assertEquals('text example 0', $data['title']);
         $this->assertEquals(
-            strtotime('1st May 2010, 01:30:00'), 
+            strtotime('1st May 2010, 01:30:00'),
             $data['updatedAt']->getTimestamp()
         );
     }
@@ -90,8 +90,8 @@ class BlueprintTest extends TestCase {
     public function testCreateAndRecall()
     {
         $factory = new Factory($this->mongator, $this->faker);
-        $blueprint = new Blueprint($factory, 
-            'Model\Article', 
+        $blueprint = new Blueprint($factory,
+            'Model\Article',
             array('author', 'categories', 'source', 'comments' => 4)
         );
 

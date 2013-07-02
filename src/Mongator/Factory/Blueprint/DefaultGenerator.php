@@ -15,27 +15,27 @@ use Mongator\Factory\Blueprint;
 use Mongator\Document\Document;
 use Faker\Generator;
 
-
-final class DefaultGenerator {
-    static public function integer(Factory $factory, $name, array $config) 
+final class DefaultGenerator
+{
+    public static function integer(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             if ( $config['value'] === null ) $config['value'] = '###';
-            return (int)$factory->getFaker()->numerify($config['value']);
+            return (int) $factory->getFaker()->numerify($config['value']);
         };
     }
 
-    static public function float(Factory $factory, $name, array $config) 
+    public static function float(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             if ( is_numeric($config['value']) ) return $config['value'];
-            return (float)$factory->getFaker()->numerify($config['value'])/100;
+            return (float) $factory->getFaker()->numerify($config['value'])/100;
         };
-    }    
+    }
 
-    static public function string(Factory $factory, $name, array $config) 
+    public static function string(Factory $factory, $name, array $config)
     {
-        if ( $config['value'] === null ) {
+        if ($config['value'] === null) {
             if ( !isset($config['options']) ) $config['value'] = 'faker::sentence(6)';
             else $config['value'] = $config['options'];
         }
@@ -46,19 +46,20 @@ final class DefaultGenerator {
             }
 
             $string = DefaultGenerator::generate($factory->getFaker(), $config['value']);
+
             return sprintf($string, $sequence);
         };
-    }       
-   
-    static public function boolean(Factory $factory, $name, array $config) 
+    }
+
+    public static function boolean(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             if ( $config['value'] !== null ) return $config['value'];
             return $factory->getFaker()->randomElement(array(true, false));
         };
-    }   
+    }
 
-    static public function date(Factory $factory, $name, array $config) 
+    public static function date(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             $value = $config['value'];
@@ -66,54 +67,55 @@ final class DefaultGenerator {
             else if ( is_integer($value) || is_float($value) ) $timestamp = $value;
             else {
                 $generated = DefaultGenerator::generate($factory->getFaker(), $config['value']);
-                if ( $generated == $config['value'] ) {
+                if ($generated == $config['value']) {
                     $timestamp = strtotime($generated);
                 } else {
-                    if ( !$generated instanceOf \DateTime ) {
+                    if (!$generated instanceOf \DateTime) {
                         throw new \InvalidArgumentException(
                             'Unexpected faker method, must return a DateTime object'
                         );
                     }
-                    
+
                     return $generated;
                 }
             }
 
             $date = new \DateTime();
             $date->setTimestamp($timestamp);
+
             return $date;
         };
-    }    
+    }
 
-    static public function raw(Factory $factory, $name, array $config) 
+    public static function raw(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             if ( $config['value'] !== null ) return $config['value'];
             return array();
         };
-    }    
+    }
 
-    static public function embeddedsOne(Factory $factory, $name, array $config) 
+    public static function embeddedsOne(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             return DefaultGenerator::embedded($factory, $config['class'], $config['value']);
         };
-    }    
+    }
 
-    static public function embeddedsMany(Factory $factory, $name, array $config) 
+    public static function embeddedsMany(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             $value = $config['value'];
             $documents = array();
 
-            if ( !$value ) {
+            if (!$value) {
                 $documents[] = DefaultGenerator::embedded($factory, $config['class']);
-            } else if ( is_numeric($value) ) {
-                for($i=0;$i<(int)$value;$i++) {
+            } elseif ( is_numeric($value) ) {
+                for ($i=0;$i<(int) $value;$i++) {
                     $documents[] = DefaultGenerator::embedded($factory, $config['class']);
                 }
-            } else if ( is_array($value) ) {
-                foreach($value as $default) {
+            } elseif ( is_array($value) ) {
+                foreach ($value as $default) {
                     $documents[] = DefaultGenerator::embedded($factory, $config['class'], $default);
                 }
             } else {
@@ -126,24 +128,24 @@ final class DefaultGenerator {
         };
     }
 
-    static public function referencesOne(Factory $factory, $name, array $config) 
+    public static function referencesOne(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             return DefaultGenerator::reference($factory, $config['class'], $config['value']);
         };
-    }    
+    }
 
-    static public function referencesMany(Factory $factory, $name, array $config) 
+    public static function referencesMany(Factory $factory, $name, array $config)
     {
         return function($sequence = null) use ($factory, $name, $config) {
             $value = $config['value'];
             $ids = array();
 
-            if ( !$value ) {
+            if (!$value) {
                 $ids[] = DefaultGenerator::reference($factory, $config['class']);
-            } else if ( is_numeric($value) ) {
-                for($i=0;$i<(int)$value;$i++) $ids[] = DefaultGenerator::reference($factory, $config['class']);
-            } else if ( is_array($value) ) {
+            } elseif ( is_numeric($value) ) {
+                for($i=0;$i<(int) $value;$i++) $ids[] = DefaultGenerator::reference($factory, $config['class']);
+            } elseif ( is_array($value) ) {
                 foreach($value as $id) $ids[] = DefaultGenerator::reference($factory, $config['class'], $id);
             } else {
                 throw new \InvalidArgumentException(
@@ -153,20 +155,20 @@ final class DefaultGenerator {
 
             return $ids;
         };
-    }   
+    }
 
     /* Private methods */
-    static public function embedded(Factory $factory, $class, $value = null) 
+    public static function embedded(Factory $factory, $class, $value = null)
     {
         if ( !$value ) $value = array();
         else if ( $value instanceOf $class ) return $value->toArray()   ;
 
-
         $bp = new Blueprint($factory, $class);
+
         return $bp->build($value, false);
     }
 
-    static public function reference(Factory $factory, $class, $value = null) 
+    public static function reference(Factory $factory, $class, $value = null)
     {
         if ( !$value ) return $factory->quick($class)->getId();
         else if ( $value instanceOf \MongoId ) return $value;
@@ -177,14 +179,14 @@ final class DefaultGenerator {
         }
     }
 
-    static public function generate(Generator $faker, $string) 
+    public static function generate(Generator $faker, $string)
     {
         preg_match('/^faker::([a-zA-Z]*)\(?([a-zA-Z0-9 ,#\?\-\:]*)\)?/', $string, $results);
         if ( count($results) == 0 ) return $string;
         else if ( count($results) == 2 ) return $faker->$results[1];
         else if ( count($results) == 3 ) {
             return call_user_func_array(
-                array($faker, $results[1]), 
+                array($faker, $results[1]),
                 explode(',', $results[2])
             );
         }

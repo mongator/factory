@@ -13,7 +13,8 @@ namespace Mongator\Factory\Tests\Blueprint;
 use Mongator\Tests\TestCase;
 use Mongator\Factory\Blueprint\Sequence;
 
-class SequenceTest extends TestCase {
+class SequenceTest extends TestCase
+{
     protected $configClass;
     protected $instance;
 
@@ -22,7 +23,7 @@ class SequenceTest extends TestCase {
         $sequence = new Sequence();
         $this->assertSame(0, $sequence->getNext());
         $this->assertSame(1, $sequence->getNext());
-    }  
+    }
 
     public function testWithStart()
     {
@@ -30,6 +31,6 @@ class SequenceTest extends TestCase {
         $this->assertSame(10, $sequence->getNext());
         $this->assertSame(11, $sequence->getNext());
 
-    }  
+    }
 
 }

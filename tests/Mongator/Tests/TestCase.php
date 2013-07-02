@@ -11,7 +11,6 @@
 
 namespace Mongator\Tests;
 
-use Mongator\Cache\ArrayCache;
 use Mongator\Connection;
 use Mongator\Mongator;
 use Mongator\Archive;
@@ -19,11 +18,11 @@ use Mongator\Type\Container as TypeContainer;
 use Faker\Factory;
 
 class TestCase extends \PHPUnit_Framework_TestCase
-{   
-    static protected $staticFaker;
-    static protected $staticConnection;
-    static protected $staticMongator;
-    static protected $staticConfigClasses;
+{
+    protected static $staticFaker;
+    protected static $staticConnection;
+    protected static $staticMongator;
+    protected static $staticConfigClasses;
 
     protected $metadataFactoryClass = 'Model\Mapping\MetadataFactory';
     protected $server = 'mongodb://localhost:27017';
@@ -47,7 +46,6 @@ class TestCase extends \PHPUnit_Framework_TestCase
         if (!static::$staticFaker) {
             static::$staticFaker = Factory::create();
         }
-
 
         if (!static::$staticMongator) {
             static::$staticMongator = new Mongator(new $this->metadataFactoryClass);

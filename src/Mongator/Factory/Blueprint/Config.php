@@ -12,7 +12,8 @@
 namespace Mongator\Factory\Blueprint;
 use Mongator\Factory\Factory;
 
-class Config {
+class Config
+{
     const GENERATOR = 'Mongator\Factory\Blueprint\DefaultGenerator';
     private $factory;
     private $class;
@@ -20,7 +21,8 @@ class Config {
     private $isEmbedded = false;
     private $config = array();
 
-    public function __construct(Factory $factory, $documentClass) {
+    public function __construct(Factory $factory, $documentClass)
+    {
         $this->configClass = $factory->getConfigClass($documentClass);
         if ( ! $this->configClass ) var_dump( $this->configClass );
         $this->factory = $factory;
@@ -35,32 +37,33 @@ class Config {
         }
     }
 
-    public function getDocumentClass() 
+    public function getDocumentClass()
     {
         return $this->documentClass;
     }
 
-    public function getMandatory() 
+    public function getMandatory()
     {
         $fields = array();
-        foreach( $this->config as $field => $config ) {
+        foreach ($this->config as $field => $config) {
             if ( $this->isMandatory($field) ) $fields[] = $field;
         }
 
         return $fields;
     }
 
-    public function getDefault($field, $override = null) {
+    public function getDefault($field, $override = null)
+    {
         $type = $this->getType($field);
         $value = $this->getValue($field);
         $config = $this->getConfig($field);
         if ( $override !== null ) $config['value'] = $override;
 
         if ( $value instanceOf \Closure ) return $value;
-    
-        if( method_exists(static::GENERATOR, $type) ) {
+
+        if ( method_exists(static::GENERATOR, $type) ) {
             return forward_static_call(
-                static::GENERATOR . "::" . $type, 
+                static::GENERATOR . "::" . $type,
                 $this->factory, $field, $config
             );
         }
@@ -68,22 +71,23 @@ class Config {
         return null;
     }
 
-    public function getDefaults($overrides = array(), $useDBnames = true) {
+    public function getDefaults($overrides = array(), $useDBnames = true)
+    {
         $overrides = $this->fixOverrides($overrides);
 
         $defaults = array();
         $fields = array_merge($this->getMandatory(), array_keys($overrides));
-        foreach( $fields  as $field ) {
+        foreach ($fields  as $field) {
             if ( $useDBnames ) $dbName = $this->getDbName($field);
             else $dbName = $field;
-            
+
             $value = null;
             if ( isset($overrides[$field]) ) {
                 $value = $overrides[$field];
-                if ( $value instanceOf \Closure ) {
+                if ($value instanceOf \Closure) {
                     $defaults[$dbName] = $value;
                     continue;
-                } 
+                }
             }
 
             $defaults[$dbName] = $this->getDefault($field, $value);
@@ -97,58 +101,58 @@ class Config {
         return isset($this->config[$field]);
     }
 
-    public function isMandatory($field) 
+    public function isMandatory($field)
     {
         if ( !$this->hasField($field) ) return null;
-        return ( isset($this->config[$field]['mandatory']) 
+        return ( isset($this->config[$field]['mandatory'])
             && $this->config[$field]['mandatory'] == true );
     }
 
-    public function getType($field) 
+    public function getType($field)
     {
         if ( !$this->hasField($field) ) return null;
         return $this->config[$field]['type'];
     }
 
-    public function isEmbedded() 
+    public function isEmbedded()
     {
         if ( !isset($this->configClass['isEmbedded']) ) return false;
         return $this->configClass['isEmbedded'];
     }
 
-    public function getValue($field) 
+    public function getValue($field)
     {
         if ( !$this->hasField($field) ) return null;
         return $this->config[$field]['value'];
     }
 
-    public function getDbName($field) 
+    public function getDbName($field)
     {
         if ( !$this->hasField($field) ) return null;
         return $this->config[$field]['dbName'];
     }
 
-    public function getConfig($field) 
+    public function getConfig($field)
     {
         if ( !$this->hasField($field) ) return null;
         return $this->config[$field];
     }
 
-    public function setValue($field, $value) 
+    public function setValue($field, $value)
     {
         if ( $value === null ) return null;
         else return $this->config[$field]['value'] = $value;
     }
 
-    public function setMandatory($field, $value) 
+    public function setMandatory($field, $value)
     {
         $this->config[$field]['mandatory'] = $value;
     }
 
-    public function fixOverrides($overrides) 
+    public function fixOverrides($overrides)
     {
         $output = array();
-        foreach($overrides as $key => $value) {
+        foreach ($overrides as $key => $value) {
             if ( is_numeric($key) ) $output[$value] = null;
             else $output[$key] = $value;
         }
@@ -156,13 +160,13 @@ class Config {
         return $output;
     }
 
-    private function parseAndCheckFields() 
+    private function parseAndCheckFields()
     {
 
-        if ( !isset($this->configClass['fields']) ) { 
+        if ( !isset($this->configClass['fields']) ) {
                 throw new \RuntimeException(sprintf('Unable to find class "%s".', $this->class));
         }
-        
+
         foreach ($this->configClass['fields'] as $name => &$field) {
             if (is_string($field)) $field = array('type' => $field);
         }
@@ -186,8 +190,7 @@ class Config {
         }
     }
 
-
-    private function parseAndCheckReferences() 
+    private function parseAndCheckReferences()
     {
         $merge = array();
         if ( isset($this->configClass['referencesOne']) ) {
@@ -210,7 +213,7 @@ class Config {
         }
     }
 
-    private function parseAndCheckEmbeddeds() 
+    private function parseAndCheckEmbeddeds()
     {
         if ( isset($this->configClass['embeddedsOne']) ) {
             foreach ($this->configClass['embeddedsOne'] as $name => &$embedded) {
@@ -248,10 +251,10 @@ class Config {
         $this->parseField($field, $name);
     }
 
-    private function parseField(&$field, $name) 
+    private function parseField(&$field, $name)
     {
         $this->config[$name]['type'] = $field['type'];
-        
+
         $this->config[$name]['dbName'] = $name;
         if ( isset($field['dbName']) ) {
             $this->config[$name]['dbName'] = $field['dbName'];;
@@ -263,14 +266,13 @@ class Config {
         }
 
         if ( isset($field['validation']) ) {
-            foreach( $field['validation'] as $class => $validator ) {
+            foreach ($field['validation'] as $class => $validator) {
                 $this->setConfigValidationForField($name, $validator);
             }
-        }     
+        }
     }
 
-
-    private function setConfigValidationForField($name, array $validation) 
+    private function setConfigValidationForField($name, array $validation)
     {
 
        $key = key($validation);
@@ -281,10 +283,8 @@ class Config {
                 break;
             case 'Choice':
                 $this->config[$name]['options'] = $config['choices'];
-                break;     
+                break;
         }
     }
-
-
 
 }

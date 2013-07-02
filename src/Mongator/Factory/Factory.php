@@ -13,7 +13,8 @@ namespace Mongator\Factory;
 use Mongator\Mongator;
 use Faker\Generator;
 
-class Factory {
+class Factory
+{
     private $mongator;
     private $faker;
     private $configClasses;
@@ -60,19 +61,20 @@ class Factory {
         return $this->blueprints[$blueprintName];
     }
 
-    public function define($blueprintName, $documentClass, array $overrides = array()) 
+    public function define($blueprintName, $documentClass, array $overrides = array())
     {
         if ( $this->hasBlueprint($blueprintName) ) {
             throw new \InvalidArgumentException(
                 sprintf('The blueprint "%s" already defined.', $blueprintName)
             );
         }
-        
+
         $blueprint = new Blueprint($this, $documentClass, $overrides);
+
         return $this->blueprints[$blueprintName] = $blueprint;
     }
 
-    public function create($blueprintName, array $overrides = array(), $autosave = true) 
+    public function create($blueprintName, array $overrides = array(), $autosave = true)
     {
         if ( !$this->hasBlueprint($blueprintName) ) {
             throw new \InvalidArgumentException(
@@ -83,18 +85,18 @@ class Factory {
         return $this->blueprints[$blueprintName]->create($overrides, $autosave);
     }
 
-    public function quick($documentClass, array $overrides = array(), $autosave = true) 
+    public function quick($documentClass, array $overrides = array(), $autosave = true)
     {
         $blueprintName = $documentClass;
         if ( !$this->hasBlueprint($blueprintName) ) {
-            $this->define($blueprintName, $documentClass); 
+            $this->define($blueprintName, $documentClass);
         }
 
         return $this->blueprints[$blueprintName]->create($overrides, $autosave);
     }
 
-    public function recall() 
+    public function recall()
     {
-        foreach ($this->blueprints as $blueprint) $blueprint->recall();   
+        foreach ($this->blueprints as $blueprint) $blueprint->recall();
     }
 }

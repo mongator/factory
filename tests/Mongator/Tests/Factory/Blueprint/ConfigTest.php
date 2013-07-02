@@ -13,18 +13,19 @@ namespace Mongator\Factory\Tests\Blueprint;
 use Mongator\Tests\TestCase;
 use Mongator\Factory\Factory;
 use Mongator\Factory\Blueprint\Config;
-use Mongator\Factory\Blueprint\Sequence;
 
-class ConfigTest extends TestCase {
+class ConfigTest extends TestCase
+{
     protected $configClass;
     protected $instance;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->factory = new Factory($this->mongator, $this->faker);
         $this->instance = new Config($this->factory, 'Model\Article');
-    }   
+    }
 
     public function testHasKeyFields()
     {
@@ -54,7 +55,7 @@ class ConfigTest extends TestCase {
     public function testMandatory()
     {
         $this->assertTrue($this->instance->isMandatory('title'));
-        $this->assertFalse($this->instance->isMandatory('line'));   
+        $this->assertFalse($this->instance->isMandatory('line'));
 
         $this->instance->setMandatory('line', true);
         $this->assertTrue($this->instance->isMandatory('line'));
@@ -64,7 +65,6 @@ class ConfigTest extends TestCase {
     {
         $this->assertSame('date', $this->instance->getType('createdAt'));
     }
-
 
     public function testValue()
     {
@@ -76,7 +76,7 @@ class ConfigTest extends TestCase {
     public function testGetMandatory()
     {
         $this->assertTrue(count($this->instance->getMandatory()) > 0);
-    }  
+    }
 
     public function testFixOverrides()
     {
@@ -96,17 +96,17 @@ class ConfigTest extends TestCase {
 
         $this->assertTrue(array_key_exists('text', $return));
         $this->assertTrue(array_key_exists('line', $return));
-    }  
+    }
 
     public function testGetDefaults()
     {
         $defaults = $this->instance->getDefaults();
         $this->assertTrue(count($defaults) > 0);
 
-        foreach( $defaults as $closure ) {
+        foreach ($defaults as $closure) {
             $this->assertInstanceOf('Closure', $closure);
             $this->assertTrue($closure(1) !== null);
         }
-    }  
+    }
 
 }

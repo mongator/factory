@@ -13,8 +13,9 @@ namespace Mongator\Factory\Tests;
 use Mongator\Tests\TestCase;
 use Mongator\Factory\Factory;
 
-class FactoryTest extends TestCase {
-    public function testConstructor() 
+class FactoryTest extends TestCase
+{
+    public function testConstructor()
     {
         $factory = new Factory($this->mongator, $this->faker);
         $this->assertInstanceOf('Mongator\Mongator', $factory->getMongator());
@@ -42,7 +43,6 @@ class FactoryTest extends TestCase {
         $this->assertInstanceOf('Model\Article', $document);
     }
 
-
     public function testQuick()
     {
         $factory = new Factory($this->mongator, $this->faker);
@@ -56,17 +56,15 @@ class FactoryTest extends TestCase {
         $this->assertTrue($factory->hasBlueprint('Model\Article'));
     }
 
-
     public function testRecall()
     {
         $factory = new Factory($this->mongator, $this->faker);
-       
+
         $factory->define('Article', 'Model\Article');
         $document = $factory->create('Article');
 
         $factory->recall();
     }
-    
 
     /**
      * @expectedException InvalidArgumentException

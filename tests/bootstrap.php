@@ -1,6 +1,5 @@
 <?php
 
-
 $loader = require __DIR__.'/../vendor/autoload.php';
 $loader->add('Mongator\\Tests', __DIR__);
 $loader->add('Model', __DIR__);
