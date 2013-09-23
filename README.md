@@ -27,7 +27,7 @@ You can see [package information on Packagist.](https://packagist.org/packages/m
 ```JSON
 {
     "require": {
-        "mongator/factory": "dev"
+        "mongator/factory": "dev-master"
     }
 }
 ```
