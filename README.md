@@ -61,7 +61,7 @@ On your test cases, just define a new fixture so you can create all the document
 
 ```php
 $this->factory->define('MyFixture', 'Model\Article');
-$document = $this->factory->create('Article');
+$document = $this->factory->create('MyFixture');
 ```
 
 And maybe with some default values
