@@ -23,14 +23,22 @@ class BlueprintTest extends TestCase
         $factory = new Factory($this->mongator, $this->faker);
         $blueprint = new Blueprint($factory, 'Model\Article');
 
-        $this->assertTrue(is_array($blueprint->build()));
+        $result = $blueprint->build();
+
+        $this->assertTrue(array_key_exists('title', $result));
+        $this->assertTrue(array_key_exists('firstName', $result));
+        $this->assertTrue(array_key_exists('status', $result));
+        $this->assertTrue(array_key_exists('position', $result));
+        $this->assertTrue(array_key_exists('createdAt', $result));
+
+        $this->assertTrue(is_array($result));
     }
 
     public function testDefaulstInConstructor()
     {
         $factory = new Factory($this->mongator, $this->faker);
         $blueprint = new Blueprint($factory, 'Model\Article', array(
-            'votes' => function () { return rand(0, 100); }
+            'votes' => function () { return rand(0, 100); },
         ));
 
         $data = $blueprint->build();
@@ -92,7 +100,13 @@ class BlueprintTest extends TestCase
         $factory = new Factory($this->mongator, $this->faker);
         $blueprint = new Blueprint($factory,
             'Model\Article',
-            array('author', 'categories', 'source', 'comments' => 4)
+            array(
+                'author', 
+                'categories', 
+                'source', 
+                'comments' => 4,
+                'firstName' => 'MyName'
+            )
         );
 
         $document = $blueprint->create();

@@ -57,7 +57,7 @@ class Blueprint
         }
     }
 
-    public function build(array $overrides = array(), $useDBNames = true)
+    public function build(array $overrides = array(), $useDBNames = false)
     {
         $position = $this->sequence->getNext();
         $data = array();

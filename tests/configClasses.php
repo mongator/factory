@@ -11,6 +11,13 @@ return array(
                     array('NotBlank' => NULL),
                 ),
             ),
+            'firstName' => array(
+                'type' => 'string',
+                'dbName' => 'first_name',
+                'validation' => array(
+                    array('NotBlank' => NULL),
+                )
+            ),
             'status' => array(
                 'type' => 'string',
                 'validation' => array(

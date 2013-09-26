@@ -183,21 +183,22 @@ class DefaultGeneratorTest extends TestCase
             'value' => null
         ));
 
-        $this->assertInstanceOf('MongoId', $closure());
+        $this->assertInstanceOf('Model\Author', $closure());
 
         $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
             'class' => 'Model\Author',
             'value' => '49a7011a05c677b9a916612a'
         ));
 
-        $this->assertEquals('49a7011a05c677b9a916612a', (string) $closure());
+
+        $this->assertEquals('49a7011a05c677b9a916612a', (string) $closure()->getId());
 
         $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
             'class' => 'Model\Author',
             'value' => new \MongoId('49a7011a05c677b9a916612a')
         ));
 
-        $this->assertEquals('49a7011a05c677b9a916612a', (string) $closure());
+        $this->assertEquals('49a7011a05c677b9a916612a', (string) $closure()->getId());
 
         $closure = DefaultGenerator::referencesOne($this->factory, 'test', array(
             'class' => 'Model\Category',
@@ -205,7 +206,7 @@ class DefaultGeneratorTest extends TestCase
         ));
 
         $repository = $this->factory->getMongator()->getRepository('Model\Category');
-        $category = $repository->findOneById($closure());
+        $category = $repository->findOneById($closure()->getId());
 
         $this->assertEquals('my special test name', $category->getName());
     }
@@ -217,14 +218,14 @@ class DefaultGeneratorTest extends TestCase
             'value' => null
         ));
 
-        $this->assertInstanceOf('MongoId', current($closure()));
+        $this->assertInstanceOf('Model\Category', current($closure()));
 
         $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
             'class' => 'Model\Category',
             'value' => array('49a7011a05c677b9a916612a')
         ));
 
-        $this->assertEquals('49a7011a05c677b9a916612a', (string) current($closure()));
+        $this->assertEquals('49a7011a05c677b9a916612a', (string) current($closure())->getId());
 
         $closure = DefaultGenerator::referencesMany($this->factory, 'test', array(
             'class' => 'Model\Category',
@@ -234,7 +235,7 @@ class DefaultGeneratorTest extends TestCase
         $result = $closure();
         $this->assertEquals(3, count($result));
 
-        foreach($result as $id) $this->assertInstanceOf('MongoId', $id);
+        foreach($result as $id) $this->assertInstanceOf('Model\Category', $id);
     }
 
     public function testEmbeddedsOne()

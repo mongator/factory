@@ -170,13 +170,18 @@ final class DefaultGenerator
 
     public static function reference(Factory $factory, $class, $value = null)
     {
-        if ( !$value ) return $factory->quick($class)->getId();
-        else if ( $value instanceOf \MongoId ) return $value;
-        else if ( $value instanceOf Document ) return $value->getId();
-        else if ( is_array($value) ) return $factory->quick($class, $value)->getId();
+        if ( !$value ) return $factory->quick($class);
+        else if ( $value instanceOf Document ) return $value;
+        else if ( is_array($value) ) return $factory->quick($class, $value);
+        else if ( $value instanceOf \MongoId ) $id = $value;
         else {
-            return new \MongoId($value);
+            $id = new \MongoId($value);
         }
+
+        $document = $factory->quick($class);
+        $document->setId($id);
+
+        return $document;
     }
 
     public static function generate(Generator $faker, $string)

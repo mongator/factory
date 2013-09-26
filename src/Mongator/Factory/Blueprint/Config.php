@@ -71,7 +71,7 @@ class Config
         return null;
     }
 
-    public function getDefaults($overrides = array(), $useDBnames = true)
+    public function getDefaults($overrides = array(), $useDBnames = false)
     {
         $overrides = $this->fixOverrides($overrides);
 
@@ -92,7 +92,7 @@ class Config
 
             $defaults[$dbName] = $this->getDefault($field, $value);
         }
-
+        
         return $defaults;
     }
 
