@@ -14,7 +14,6 @@ namespace Mongator\Tests;
 use Mongator\Cache\ArrayCache;
 use Mongator\Connection;
 use Mongator\Mongator;
-use Mongator\Archive;
 use Mongator\Type\Container as TypeContainer;
 use Faker\Factory;
 
@@ -79,7 +78,6 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        Archive::clear();
         TypeContainer::reset();
     }
 }
