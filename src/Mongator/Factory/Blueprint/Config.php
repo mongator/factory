@@ -138,14 +138,15 @@ class Config
         return $this->config[$field];
     }
 
-    public function setValue($field, $value)
+    public function setValue($field, $value) 
     {
-        if ( $value === null ) return null;
+        if ( $value === null || !$this->hasField($field) ) return null;
         else return $this->config[$field]['value'] = $value;
     }
 
-    public function setMandatory($field, $value)
+    public function setMandatory($field, $value) 
     {
+        if ( !$this->hasField($field) ) return null;
         $this->config[$field]['mandatory'] = $value;
     }
 
